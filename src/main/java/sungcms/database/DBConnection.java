@@ -15,6 +15,7 @@ public class DBConnection {
     private Connection con;
     private Statement stmt;
     private ResultSet rs;
+    private int flag;
     // Database credentials
     final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     final String DB_NAME = "sungcms";
@@ -34,6 +35,7 @@ public class DBConnection {
         rs = null;
         stmt = null;
         con = null;
+        flag = -1;
         Class.forName(JDBC_DRIVER);
     }
 
@@ -45,6 +47,16 @@ public class DBConnection {
         stmt = con.createStatement();
         rs = stmt.executeQuery(query);
         return rs;
+    }
+    
+    public int update(String query) throws SQLException, ClassNotFoundException {
+        System.out.println("Connection to a selected database...");
+        Class.forName(JDBC_DRIVER);
+        con = DriverManager.getConnection(DB_URL);
+        System.out.println("Connected database successfully...");
+        stmt = con.createStatement();
+        flag = stmt.executeUpdate(query);
+        return flag;
     }
 
     public void cleanup () {
