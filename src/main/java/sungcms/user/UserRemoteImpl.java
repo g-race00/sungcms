@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package sungcms.user;
-import sungcms.user.User;
+
 import java.rmi.*;
 import java.rmi.server.*;
 import java.sql.*;

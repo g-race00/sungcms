@@ -1,6 +1,5 @@
 package sungcms; // NOPMD - Ok to have high number of imports
 
-import java.nio.file.Path;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -136,10 +135,5 @@ public final class App {
     public static void main(final String[] args) {
         final App app = new App();
         SwingUtilities.invokeLater(app::createAndShowGui);
-    }
-
-    /** Get data path. */
-    private static Path getDataPath(final String filename) {
-        return Path.of("data", "main", filename);
-    }
+}
 }

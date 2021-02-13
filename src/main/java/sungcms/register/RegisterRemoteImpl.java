@@ -5,12 +5,9 @@
  */
 package sungcms.register;
 
-import sungcms.login.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Optional;
 import sungcms.database.DBConnection;
 import sungcms.user.User;
 

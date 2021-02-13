@@ -64,7 +64,7 @@ public final class ProfileController {
             user.setEmail(editProfileView.emailTf.getText());
             user.setIdentityNum(editProfileView.identityTf.getText());
             user.setUsername(editProfileView.usernameTf.getText());
-            user.setPassword(editProfileView.passwordPf.getText());
+            user.setPassword(new String(editProfileView.passwordPf.getPassword()));
             
             boolean result = false;
             try {

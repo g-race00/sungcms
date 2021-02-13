@@ -1,6 +1,5 @@
 package sungcms.view;
 
-import sungcms.view.ContentView;
 import javax.swing.JPanel;
 import sungcms.menu.MenuView;
 

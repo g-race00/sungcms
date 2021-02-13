@@ -98,18 +98,15 @@ public final class LoginController {
     }
     
     private void registerLblMouseClicked(java.awt.event.MouseEvent evt) {                                      
-        // TODO add your handling code here:
         registerController.get().index();
     }                                     
 
     private void registerLblMouseEntered(java.awt.event.MouseEvent evt) {                                      
-        // TODO add your handling code here:
         loginView.registerLbl.setForeground(Color.gray);
         loginView.registerLbl.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, Color.gray));
     }                                     
 
     private void registerLblMouseExited(java.awt.event.MouseEvent evt) {                                     
-        // TODO add your handling code here:
         loginView.registerLbl.setForeground(Color.blue);
         loginView.registerLbl.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, Color.blue));
     } 

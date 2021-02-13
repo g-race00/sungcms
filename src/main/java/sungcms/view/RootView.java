@@ -1,6 +1,5 @@
 package sungcms.view;
 
-import sungcms.view.MainView;
 import java.awt.CardLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;

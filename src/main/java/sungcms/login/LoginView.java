@@ -1,7 +1,6 @@
 package sungcms.login;
 
 import java.awt.Dimension;
-import java.awt.Font;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
