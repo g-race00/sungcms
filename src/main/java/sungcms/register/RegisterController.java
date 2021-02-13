@@ -96,10 +96,13 @@ public final class RegisterController {
             
             boolean uniqueUsername = false;
             boolean uniqueIdentity = false;
+            boolean uniqueEmail = false;
             
             try {
                 RegisterRemote registerStub = (RegisterRemote)Naming.lookup("rmi://localhost:7777/register");
-                uniqueUsername = registerStub.checkUsername(username);
+                uniqueUsername = registerStub.checkUnique("username", username);
+                uniqueIdentity = registerStub.checkUnique("identity_num", identityNum);
+                uniqueEmail = registerStub.checkUnique("email", email);
                 
             } catch (Exception e){
                 e.printStackTrace();
@@ -109,16 +112,12 @@ public final class RegisterController {
                 throw new InvalidFieldException(null, "Username is taken! Please try another one!");
             }
             
-            try {
-                RegisterRemote registerStub = (RegisterRemote)Naming.lookup("rmi://localhost:7777/register");
-                uniqueIdentity = registerStub.checkIdentityNum(identityNum);
-                
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-            
             if(!uniqueIdentity){
                 throw new InvalidFieldException(null, "IC/Passport Number is taken! Please try another one!");
+            }
+            
+            if(!uniqueEmail){
+                throw new InvalidFieldException(null, "Email is taken! Please try another one!");
             }
             
             try {
@@ -131,6 +130,7 @@ public final class RegisterController {
             
             if(!user.getId().equals("-1")){
                 session.setUser(user);
+                rootView.showSuccessDialog("Register successfully!");
                 rootView.mainView.menuView.render(user);
                 dashboardController.get().index();
                 

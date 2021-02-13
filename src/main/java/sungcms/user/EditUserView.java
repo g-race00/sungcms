@@ -51,11 +51,13 @@ public final class EditUserView {
 
     /** Render. */
     public void render(final User user) {
+        saveBtn.setActionCommand(user.getId());
+        cancelBtn.setActionCommand(user.getId());
         idLbl.setText(String.valueOf(user.getId()));
         firstNameTf.setText(user.getFirstName());
         lastNameTf.setText(user.getLastName());
         emailTf.setText(user.getEmail());
-        identityTf.setText(user.getEmail());
+        identityTf.setText(user.getIdentityNum());
         adminCb.setSelected(user.isAdmin());
         usernameTf.setText(user.getUsername());
         passwordPf.setText(user.getPassword());

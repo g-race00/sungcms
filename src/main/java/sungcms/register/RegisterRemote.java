@@ -14,7 +14,6 @@ import sungcms.user.User;
  * @author mushmush
  */
 public interface RegisterRemote extends Remote{
-    public boolean checkUsername(String username) throws RemoteException;
-    public boolean checkIdentityNum(String identityNum) throws RemoteException;
+    public boolean checkUnique(String label, String username) throws RemoteException;
     public User register(User user) throws RemoteException;
 }

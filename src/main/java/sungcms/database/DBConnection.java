@@ -17,18 +17,21 @@ public class DBConnection {
     private ResultSet rs;
     private int flag;
     // Database credentials
-    final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    final String DB_NAME = "sungcms";
-    final String DB_HOSTNAME = "db-mysql-sungcms.cfb1lupuryk4.us-west-2.rds.amazonaws.com";
-    final String DB_PORT = "3306";
-    final String DB_USER = "admin";
-    final String DB_PASS = "fYaE2HhxZymLXs9ikq2W";
-    final String DB_URL = "jdbc:mysql://" + DB_HOSTNAME
-                + ":" + DB_PORT
-                + "/" + DB_NAME
-                + "?useSSL=false"
-                + "&user=" + DB_USER
-                + "&password=" + DB_PASS;
+//    final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+//    final String DB_NAME = "sungcms";
+//    final String DB_HOSTNAME = "db-mysql-sungcms.cfb1lupuryk4.us-west-2.rds.amazonaws.com";
+//    final String DB_PORT = "3306";
+//    final String DB_USER = "admin";
+//    final String DB_PASS = "fYaE2HhxZymLXs9ikq2W";
+//    final String DB_URL = "jdbc:mysql://" + DB_HOSTNAME
+//                + ":" + DB_PORT
+//                + "/" + DB_NAME
+//                + "?useSSL=false"
+//                + "&user=" + DB_USER
+//                + "&password=" + DB_PASS;
+    
+    final String JDBC_DRIVER = "org.sqlite.JDBC";
+    final String DB_URL = "jdbc:sqlite:src/main/resources/database/sungcms.sqlite";
 
 
     public DBConnection() throws SQLException, ClassNotFoundException{

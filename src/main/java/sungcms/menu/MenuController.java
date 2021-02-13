@@ -9,12 +9,8 @@ import sungcms.user.UserController;
 
 /** Menu controller. */
 public final class MenuController {
-    /** Session. */
     private final Session session; // NOPMD - temporary
-
-    /** Menu view. */
     private final MenuView menuView;
-    /** Root view. */
     private final RootView rootView; // NOPMD - temporary
 
     /** Construct. */
@@ -35,7 +31,7 @@ public final class MenuController {
             final ProfileController profileController,
             final DashboardController dashboardController) {
 
-        menuView.userBtn.addActionListener(e -> userController.index(""));
+        menuView.userBtn.addActionListener(e -> userController.index());
         menuView.logoutBtn.addActionListener(e -> loginController.logout());
         menuView.profileBtn.addActionListener(e -> profileController.index());
         menuView.dashboardBtn.addActionListener(e -> dashboardController.index());

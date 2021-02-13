@@ -39,14 +39,14 @@ public final class RootView {
 
     /** Construct. */
     public RootView(final MainView mainView, final LoginView loginView, final RegisterView registerView) {
-        successIcon = new ImageIcon(getClass().getResource("/success.png"), "Success");
-        errorIcon = new ImageIcon(getClass().getResource("/error.png"), "Error");
+        successIcon = new ImageIcon(getClass().getResource("/img/success.png"), "Success");
+        errorIcon = new ImageIcon(getClass().getResource("/img/error.png"), "Error");
 
         this.mainView = mainView;
         this.loginView = loginView;
         this.registerView = registerView;
 
-        frame = new JFrame("PCMS");
+        frame = new JFrame("SUN GCMS");
         cardLayout = ViewUtil.createVariableSizeCardLayout();
         pane = new JPanel(cardLayout);
         scrollPane = ViewUtil.createScrollPane(pane);

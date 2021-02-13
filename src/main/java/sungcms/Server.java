@@ -12,6 +12,7 @@ import java.rmi.registry.Registry;
 import java.sql.SQLException;
 import sungcms.user.UserRemoteImpl;
 import sungcms.login.LoginRemoteImpl;
+import sungcms.register.RegisterRemoteImpl;
 
 /**
  *
@@ -25,6 +26,7 @@ public class Server {
             Registry reg = LocateRegistry.createRegistry(7777);
             reg.rebind("user",new UserRemoteImpl(db));
             reg.rebind("login", new LoginRemoteImpl(db));
+            reg.rebind("register", new RegisterRemoteImpl(db));
         } catch (Exception e) {
             System.out.println(e);
         }

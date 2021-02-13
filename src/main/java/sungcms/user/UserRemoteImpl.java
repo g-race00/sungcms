@@ -9,8 +9,8 @@ import java.rmi.*;
 import java.rmi.server.*;
 import java.sql.*;
 import java.util.*;
+
 import sungcms.database.DBConnection;
-import sungcms.user.UserRemote;
 
 /**
  *
@@ -36,21 +36,15 @@ public class UserRemoteImpl extends UnicastRemoteObject implements UserRemote{
             
             //Extract data from result set
             while(rs.next()){
-                // Retrieve by column name                
-                String id = String.valueOf(rs.getInt("id"));
-                
-                String firstName = rs.getString("first_name");
-                String lastName = rs.getString("last_name");
-                String email = rs.getString("email");
-                String identityNum = rs.getString("identity_num");
-                
                 // Setting the values
                 User user = new User();
-                user.setId(id);
-                user.setFirstName(firstName);
-                user.setLastName(lastName);
-                user.setEmail(email);
-                user.setIdentityNum(identityNum);
+                user.setId(rs.getString("id"));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastName(rs.getString("last_name"));
+                user.setEmail(rs.getString("email"));
+                user.setIdentityNum(rs.getString("identity_num"));
+                user.setUsername(rs.getString("username"));
+                user.setAdmin(rs.getBoolean("admin"));
                 list.add(user);
             }
             
@@ -64,18 +58,16 @@ public class UserRemoteImpl extends UnicastRemoteObject implements UserRemote{
     }
 
     @Override
-    public Optional<User> show(String id) throws RemoteException {
-        Optional<User> optionalUser = Optional.empty();
+    public User show(String id) throws RemoteException {
+        User user = new User();
         try{
             // Execute a query
             System.out.println("Creating statement...");
-            String sql = "SELECT * FROM users" + ""
-                    + "WHERE id = " + id;
+            String sql = "SELECT * FROM users WHERE id = " + id + ";";
             ResultSet rs = db.query(sql);
             
             if(rs.next()){
                 // Setting the values
-                User user = new User();
                 user.setId(rs.getString("id"));
                 user.setFirstName(rs.getString("first_name"));
                 user.setLastName(rs.getString("last_name"));
@@ -84,7 +76,6 @@ public class UserRemoteImpl extends UnicastRemoteObject implements UserRemote{
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));
                 user.setAdmin(rs.getBoolean("admin"));
-                optionalUser = Optional.of(user);
             }
             
         } catch (Exception e){
@@ -92,29 +83,34 @@ public class UserRemoteImpl extends UnicastRemoteObject implements UserRemote{
         } finally {
             db.cleanup();
         }
-        return optionalUser;
+        return user;
     }
 
     @Override
     public String store(User user) throws RemoteException {
         String id = "-1";
+        String admin = user.isAdmin()? "1":"0";
         try{
             // Execute a query
             System.out.println("Creating statement...");
-            String sql = "UPDATE users SET"
-                    + "first_name = '" + user.getFirstName() + "'"
-                    + "last_name = '" + user.getLastName() + "'"
-                    + "email = '" + user.getEmail() + "'"
-                    + "identity_num = '" + user.getIdentityNum() + "'"
-                    + "password = '" + user.getPassword() + "'"
-                    + "admin = " + user.isAdmin()
-                    + "WHERE id = " + user.getId() + ";"
-                    + "SELECT LAST_INSERT_ID()";
-            ResultSet rs = db.query(sql);
-            
-            if(rs.next()){
-                id = rs.getString(1);
-            };
+            String sql = "INSERT INTO users (username, first_name, last_name, email, identity_num, password, admin)" 
+                    + "VALUES (" 
+                    + "'" + user.getUsername() + "', "
+                    + "'" + user.getFirstName() + "', "
+                    + "'" + user.getLastName() + "', "
+                    + "'" + user.getEmail() + "', "
+                    + "'" + user.getIdentityNum() + "', "
+                    + "'" + user.getPassword() + "', "
+                    +  admin + ")";
+            int flag = db.update(sql);
+
+            if(flag == 1){
+                String sqlID = "SELECT id FROM users WHERE username = '" + user.getUsername() + "'";
+                ResultSet rs = db.query(sqlID);
+                if(rs.next()){
+                    id = rs.getString(1);
+                }
+            }
             
         } catch (Exception e){
             System.out.println(e);
@@ -127,21 +123,26 @@ public class UserRemoteImpl extends UnicastRemoteObject implements UserRemote{
     @Override
     public boolean update(User user) throws RemoteException {
         boolean result = false;
+        String admin = user.isAdmin()? "1":"0";
         try{
             // Execute a query
             System.out.println("Creating statement...");
-            String sql = "UPDATE users SET"
-                    + "first_name = '" + user.getFirstName() + "'"
-                    + "last_name = '" + user.getLastName() + "'"
-                    + "email = '" + user.getEmail() + "'"
-                    + "identity_num = '" + user.getIdentityNum() + "'"
-                    + "password = '" + user.getPassword() + "'"
-                    + "admin = " + user.isAdmin()
-                    + "WHERE id = " + user.getId() + ";"
-                    + "SELECT LAST_INSERT_ID()";
-            ResultSet rs = db.query(sql);
+            String sql = "UPDATE users SET "
+                + "first_name = '" + user.getFirstName() + "', "
+                + "last_name = '" + user.getLastName() + "', "
+                + "email = '" + user.getEmail() + "', "
+                + "identity_num = '" + user.getIdentityNum() + "', "
+                + "username = '" + user.getUsername() + "', "
+                + "password = '" + user.getPassword() + "', "
+                + "admin = " + admin + " "
+                + "WHERE id = " + user.getId() + ";";
             
-            result = rs.next();
+            System.out.println(sql);
+            int flag = db.update(sql);
+            System.out.println("Update :" + flag);
+            if(flag == 1){
+                result = true;
+            };
             
         } catch (Exception e){
             System.out.println(e);
@@ -154,6 +155,46 @@ public class UserRemoteImpl extends UnicastRemoteObject implements UserRemote{
     @Override
     public boolean delete(User user) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean checkUnique(String label, String string) throws RemoteException{
+        boolean result = false;
+        try{
+            System.out.println("Creating statement...");
+            String sql = "SELECT " + label + " FROM users " 
+                + "WHERE "+ label +" = '" + string + "'";
+            ResultSet rs = db.query(sql);
+
+            result = !rs.next();
+
+        } catch (Exception e){
+            System.out.println(e);
+        } finally {
+            db.cleanup();
+        }
+        return result;
+    }
+
+    @Override
+    public boolean checkUniqueOther(String label, String string, String id) throws RemoteException{
+        boolean result = false;
+        try{
+            System.out.println("Creating statement...");
+            String sql = "SELECT " + label + " FROM users " 
+                + "WHERE "+ label +" = '" + string + "' "
+                + "AND id IS NOT " + id + ";";
+            ResultSet rs = db.query(sql);
+
+            result = !rs.next();
+            System.out.println(string + " : " +result);
+
+        } catch (Exception e){
+            System.out.println(e);
+        } finally {
+            db.cleanup();
+        }
+        return result;
     }
 
 

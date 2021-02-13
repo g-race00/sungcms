@@ -1,6 +1,5 @@
 package sungcms.user;
 
-import java.util.Locale;
 import java.rmi.*;
 import java.util.List;
 import sungcms.view.ContentView;
@@ -37,20 +36,17 @@ public final class UserController {
 
     /** Initialize. */
     public void init() {
-        userListView.searchTf.addActionListener(e -> index(e.getActionCommand()));
         userListView.addBtn.addActionListener(e -> create());
         userInfoView.editBtn.addActionListener(e -> edit(e.getActionCommand()));
-        userInfoView.backBtn.addActionListener(e -> index(userListView.searchTf.getText()));
+        userInfoView.backBtn.addActionListener(e -> index());
         addUserView.saveBtn.addActionListener(e -> store());
-        addUserView.cancelBtn.addActionListener(e -> index(""));
+        addUserView.cancelBtn.addActionListener(e -> index());
         editUserView.saveBtn.addActionListener(e -> update(e.getActionCommand()));
         editUserView.cancelBtn.addActionListener(e -> show(e.getActionCommand()));
     }
 
     /** List users. */
-    public void index(final String search) {
-        final String lowerCase = search.toLowerCase(Locale.US);
-
+    public void index() {
         rootView.render(RootView.Views.MAIN_VIEW);
         rootView.mainView.contentView.render(ContentView.Views.USER_LIST);
         
@@ -59,7 +55,7 @@ public final class UserController {
         try {
             UserRemote userStub = (UserRemote)Naming.lookup("rmi://localhost:7777/user");
             userList = userStub.index();
-            userListView.render(userList, search, e -> show(e.getActionCommand()));
+            userListView.render(userList, e -> show(e.getActionCommand()), e -> destroy(e.getActionCommand()));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -75,26 +71,71 @@ public final class UserController {
     /** Store created user. */
     public void store() {
         try {
-            final User newUser = new User(
-            addUserView.firstNameTf.getText(),
-            addUserView.lastNameTf.getText(),
-            addUserView.emailTf.getText(),
-            addUserView.identityTf.getText(),
-            addUserView.usernameTf.getText(),
-            addUserView.passwordPf.getText());
+            String firstName = addUserView.firstNameTf.getText();
+            String lastName = addUserView.lastNameTf.getText();
+            String identityNum = addUserView.identityTf.getText();
+            String email = addUserView.emailTf.getText();
+            String username = addUserView.usernameTf.getText();
+            String password = new String(addUserView.passwordPf.getPassword());
+            boolean admin = addUserView.adminCb.isSelected();
             
-            String id = "-1";
+            ValidationUtil.notEmpty("first name", firstName);
+            ValidationUtil.notEmpty("last name", lastName);
+            ValidationUtil.notEmpty("IC/Passport number", identityNum);
+            ValidationUtil.notEmpty("email", email);
+            ValidationUtil.notEmpty("username", username);
+            ValidationUtil.notEmpty("password", password);
+            
+            username = ValidationUtil.validUsernameFormat("username", username);
+            email = ValidationUtil.validEmailFormat("email", email);
+            
+            User user = new User(
+                firstName,
+                lastName,
+                email,
+                identityNum,
+                username,
+                password,
+                admin
+            );
+            
+            boolean uniqueUsername = false;
+            boolean uniqueIdentity = false;
+            boolean uniqueEmail = false;
+            
             try {
                 UserRemote userStub = (UserRemote)Naming.lookup("rmi://localhost:7777/user");
-                id = userStub.store(newUser);
-                newUser.setId(id);
+                uniqueUsername = userStub.checkUnique("username", username);
+                uniqueIdentity = userStub.checkUnique("identity_num", identityNum);
+                uniqueEmail = userStub.checkUnique("email", email);
+                
             } catch (Exception e){
                 e.printStackTrace();
             }
             
-            if(!id.equals("-1")){
+            if(!uniqueUsername){
+                throw new InvalidFieldException(null, "Username is taken! Please try another one!");
+            }
+            
+            if(!uniqueIdentity){
+                throw new InvalidFieldException(null, "IC/Passport Number is taken! Please try another one!");
+            }
+            
+            if(!uniqueEmail){
+                throw new InvalidFieldException(null, "Email is taken! Please try another one!");
+            }
+            
+            try {
+                UserRemote userStub = (UserRemote)Naming.lookup("rmi://localhost:7777/user");
+                user.setId(userStub.store(user));
+                
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            
+            if(!user.getId().equals("-1")){
                 rootView.showSuccessDialog("User added.");
-                show(newUser.getId());
+                show(user.getId());
             } else {
                 rootView.showErrorDialog("Something's wrong! Please try again!");
             }
@@ -109,12 +150,12 @@ public final class UserController {
             User user = new User();
             try {
                 UserRemote userStub = (UserRemote)Naming.lookup("rmi://localhost:7777/user");
-                user = userStub.show(id).orElse(null);
+                user = userStub.show(id);
 
             } catch (Exception e){
                 e.printStackTrace();
             }
-            if(!user.equals(null)){
+            if(!user.getId().equals("-1")){
                 rootView.render(RootView.Views.MAIN_VIEW);
                 rootView.mainView.contentView.render(ContentView.Views.USER_INFO);
                 userInfoView.render(user);
@@ -125,20 +166,20 @@ public final class UserController {
             rootView.showErrorDialog(ex.getMessage());
         }
     }
-
+    
     /** Edit user info. */
     public void edit(final String id) {
         try {
             User user = new User();
             try {
                 UserRemote userStub = (UserRemote)Naming.lookup("rmi://localhost:7777/user");
-                user = userStub.show(id).orElse(null);
+                user = userStub.show(id);
 
             } catch (Exception e){
                 e.printStackTrace();
             }
             
-            if(!user.equals(null)){
+            if(!user.getId().equals("-1")){
                 rootView.render(RootView.Views.MAIN_VIEW);
                 rootView.mainView.contentView.render(ContentView.Views.EDIT_USER);
                 editUserView.render(user);
@@ -153,36 +194,87 @@ public final class UserController {
     /** Update user info. */
     public void update(final String id) {
         try {
-            final User newUser = new User(
-            addUserView.firstNameTf.getText(),
-            addUserView.lastNameTf.getText(),
-            addUserView.emailTf.getText(),
-            addUserView.identityTf.getText(),
-            addUserView.usernameTf.getText(),
-            addUserView.passwordPf.getText());
+            String firstName = editUserView.firstNameTf.getText();
+            String lastName = editUserView.lastNameTf.getText();
+            String identityNum = editUserView.identityTf.getText();
+            String email = editUserView.emailTf.getText();
+            String username = editUserView.usernameTf.getText();
+            String password = new String(editUserView.passwordPf.getPassword());
+            boolean admin = editUserView.adminCb.isSelected();
             
-            newUser.setId(id);
+            ValidationUtil.notEmpty("first name", firstName);
+            ValidationUtil.notEmpty("last name", lastName);
+            ValidationUtil.notEmpty("IC/Passport number", identityNum);
+            ValidationUtil.notEmpty("email", email);
+            ValidationUtil.notEmpty("username", username);
+            ValidationUtil.notEmpty("password", password);
             
-            Boolean result = false;
+            username = ValidationUtil.validUsernameFormat("username", username);
+            email = ValidationUtil.validEmailFormat("email", email);
+            
+            User user = new User(
+                firstName,
+                lastName,
+                email,
+                identityNum,
+                username,
+                password,
+                admin
+            );
+
+            user.setId(id);
+            
+            boolean uniqueUsername = false;
+            boolean uniqueIdentity = false;
+            boolean uniqueEmail = false;
+            
             try {
                 UserRemote userStub = (UserRemote)Naming.lookup("rmi://localhost:7777/user");
-                result = userStub.update(newUser);
+                uniqueUsername = userStub.checkUniqueOther("username", username, id);
+                uniqueIdentity = userStub.checkUniqueOther("identity_num", identityNum, id);
+                uniqueEmail = userStub.checkUniqueOther("email", email, id);
+                
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            
+            if(!uniqueUsername){
+                throw new InvalidFieldException(null, "Username is taken! Please try another one!");
+            }
+            
+            if(!uniqueIdentity){
+                throw new InvalidFieldException(null, "IC/Passport Number is taken! Please try another one!");
+            }
+            
+            if(!uniqueEmail){
+                throw new InvalidFieldException(null, "Email is taken! Please try another one!");
+            }
+            
+            boolean result = false;
+            try {
+                UserRemote userStub = (UserRemote)Naming.lookup("rmi://localhost:7777/user");
+                result = userStub.update(user);
+                
             } catch (Exception e){
                 e.printStackTrace();
             }
             
             if(result){
-                if (newUser.getId().equals(session.getUser().get().getId())) {
-                    session.setUser(newUser);
-                    rootView.mainView.menuView.render(newUser);
+                if (user.getId().equals(session.getUser().get().getId())) {
+                    session.setUser(user);
+                    rootView.mainView.menuView.render(user);
                 }
                 rootView.showSuccessDialog("User updated.");
-                show(newUser.getId());
+                show(user.getId());
             } else {
                 rootView.showErrorDialog("Something's wrong! Please try again!");
             }
         } catch (InvalidFieldException ex) {
             rootView.showErrorDialog(ex.getMessage());
         }
+    }
+    
+    public void destroy(final String id){
+        
     }
 }

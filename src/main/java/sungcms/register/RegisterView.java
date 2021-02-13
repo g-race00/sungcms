@@ -96,7 +96,12 @@ public final class RegisterView {
 
     /** Render. */
     public void render() {
+        firstNameTf.setText("");
+        lastNameTf.setText("");
+        identityTf.setText("");
+        emailTf.setText("");
         usernameTf.setText("");
         passwordPf.setText("");
+        confirmPasswordPf.setText("");
     }
 }

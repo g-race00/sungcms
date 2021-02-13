@@ -30,15 +30,14 @@ public class RegisterRemoteImpl extends UnicastRemoteObject implements RegisterR
     public User register(User user) throws RemoteException{
         try{
             System.out.println("Creating statement...");
-            String sql = "INSERT sungcms.users (username, first_name, last_name, email, identity_num, password, admin)" 
+            String sql = "INSERT INTO users (username, first_name, last_name, email, identity_num, password)" 
                     + "VALUES (" 
                     + "'" + user.getUsername() + "', "
                     + "'" + user.getFirstName() + "', "
                     + "'" + user.getLastName() + "', "
                     + "'" + user.getEmail() + "', "
                     + "'" + user.getIdentityNum() + "', "
-                    + "'" + user.getPassword() + "', "
-                    + "false)";
+                    + "'" + user.getPassword() + "')";
             int flag = db.update(sql);
 
             if(flag == 1){
@@ -59,12 +58,12 @@ public class RegisterRemoteImpl extends UnicastRemoteObject implements RegisterR
     }
 
     @Override
-    public boolean checkUsername(String username) throws RemoteException {
+    public boolean checkUnique(String label, String string) throws RemoteException{
         boolean result = false;
         try{
-            // Check username first
             System.out.println("Creating statement...");
-            String sql = "SELECT username FROM users WHERE username = '" + username + "'";
+            String sql = "SELECT " + label + " FROM users " 
+                + "WHERE "+ label +" = '" + string + "'";
             ResultSet rs = db.query(sql);
 
             result = !rs.next();
@@ -74,30 +73,6 @@ public class RegisterRemoteImpl extends UnicastRemoteObject implements RegisterR
         } finally {
             db.cleanup();
         }
-        
         return result;
     }
-    
-    @Override
-    public boolean checkIdentityNum(String identityNum) throws RemoteException {
-        boolean result = false;
-        try{
-            // Check username first
-            System.out.println("Creating statement...");
-            String sql = "SELECT identity_num FROM users WHERE identity_num = '" + identityNum + "'";
-            ResultSet rs = db.query(sql);
-
-            result = !rs.next();
-
-        } catch (Exception e){
-            System.out.println(e);
-        } finally {
-            db.cleanup();
-        }
-        
-        return result;
-    }
-    
-   
-
 }

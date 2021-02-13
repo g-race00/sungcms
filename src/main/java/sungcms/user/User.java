@@ -29,7 +29,9 @@ public class User implements java.io.Serializable{
         this.admin = false;
     };
     
+    // For registration
     public User(String firstName, String lastName, String email, String identityNum, String username, String password) {
+        this.id = "-1";
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -38,6 +40,19 @@ public class User implements java.io.Serializable{
         this.password = password;
         this.admin = false;
     }
+    
+    // For create user
+    public User(String firstName, String lastName, String email, String identityNum, String username, String password, boolean admin) {
+        this.id = "-1";
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.identityNum = identityNum;
+        this.username = username;
+        this.password = password;
+        this.admin = admin;
+    }
+   
 
     public String getId() {
         return id;

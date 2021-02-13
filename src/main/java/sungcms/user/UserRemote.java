@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package sungcms.user;
-import sungcms.user.User;
 import java.rmi.*;
 import java.util.*;
 
@@ -13,9 +12,11 @@ import java.util.*;
  * @author mushmush
  */
 public interface UserRemote extends Remote{
-    public List<User> index() throws RemoteException;
-    public Optional<User> show(String id) throws RemoteException;
-    public String store(User user) throws RemoteException;
-    public boolean update(User user) throws RemoteException;
-    public boolean delete(User user) throws RemoteException;
+    public List<User> index() throws RemoteException; //Return list of user object
+    public User show(String id) throws RemoteException; //Return user object
+    public String store(User user) throws RemoteException; //Return newly added user.id integer
+    public boolean update(User user) throws RemoteException; //Retrun true/false
+    public boolean delete(User user) throws RemoteException; //Return true/false
+    public boolean checkUnique(String label, String string) throws RemoteException; //Return true/false
+    public boolean checkUniqueOther(String label, String string, String id) throws RemoteException; //Return true/false
 }

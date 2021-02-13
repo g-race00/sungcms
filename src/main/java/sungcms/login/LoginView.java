@@ -30,7 +30,7 @@ public final class LoginView {
         titleLbl.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
         final JLabel imageLbl = new JLabel();
-        imageLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sungcms/image/systemIcon.png")));
+        imageLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/systemIcon.png")));
         imageLbl.setAlignmentX(JLabel.CENTER_ALIGNMENT);// NOI18N
 
         final JLabel usernameLbl = ViewUtil.createCenteredInputLabel("Username");

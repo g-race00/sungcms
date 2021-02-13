@@ -30,7 +30,7 @@ public class LoginRemoteImpl extends UnicastRemoteObject implements LoginRemote 
         User user = new User();
         try{
             System.out.println("Creating statement...");
-            String sql = "SELECT * FROM sungcms.users WHERE username = '" + username + "' AND password = '" + password + "'";
+            String sql = "SELECT * FROM users WHERE username = '" + username + "' AND password = '" + password + "'";
             ResultSet rs = db.query(sql);
 
             if(rs.next()){
