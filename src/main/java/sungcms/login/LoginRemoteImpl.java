@@ -26,7 +26,7 @@ public class LoginRemoteImpl extends UnicastRemoteObject implements LoginRemote 
     }
 
     @Override
-    public User checkLogin(String username, String password) throws RemoteException{
+    public User login(String username, String password) throws RemoteException{
         User user = new User();
         try{
             System.out.println("Creating statement...");
@@ -54,47 +54,5 @@ public class LoginRemoteImpl extends UnicastRemoteObject implements LoginRemote 
 
         return user;
     }
-
-    @Override
-    public boolean checkUsername(String username) throws RemoteException {
-        boolean result = false;
-        try{
-            // Check username first
-            System.out.println("Creating statement...");
-            String sql = "SELECT username FROM users WHERE username = '" + username + "'";
-            ResultSet rs = db.query(sql);
-
-            result = rs.next();
-
-        } catch (Exception e){
-            System.out.println(e);
-        } finally {
-            db.cleanup();
-        }
-        
-        return result;
-    }
-    
-    @Override
-    public boolean checkIdentity(String identityNum) throws RemoteException {
-        boolean result = false;
-        try{
-            // Check username first
-            System.out.println("Creating statement...");
-            String sql = "SELECT identity_num FROM users WHERE identity_num = '" + identityNum + "'";
-            ResultSet rs = db.query(sql);
-
-            result = rs.next();
-
-        } catch (Exception e){
-            System.out.println(e);
-        } finally {
-            db.cleanup();
-        }
-        
-        return result;
-    }
-    
-   
 
 }

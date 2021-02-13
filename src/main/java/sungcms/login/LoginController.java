@@ -79,7 +79,7 @@ public final class LoginController {
             User user = new User();
             try {
                 LoginRemote loginStub = (LoginRemote)Naming.lookup("rmi://localhost:7777/login");
-                user = loginStub.checkLogin(loginView.usernameTf.getText(), new String(loginView.passwordPf.getPassword()));
+                user = loginStub.login(loginView.usernameTf.getText(), new String(loginView.passwordPf.getPassword()));
             } catch (Exception e){
                 e.printStackTrace();
             }
