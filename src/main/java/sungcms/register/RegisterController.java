@@ -62,13 +62,68 @@ public final class RegisterController {
     /** Login. */
     public void register() {
         try {
-            ValidationUtil.notEmpty("username", registerView.usernameTf.getText());
-            ValidationUtil.notEmpty("password", registerView.passwordPf.getPassword());
+            String firstName = registerView.firstNameTf.getText();
+            String lastName = registerView.lastNameTf.getText();
+            String identityNum = registerView.identityTf.getText();
+            String email = registerView.emailTf.getText();
+            String username = registerView.usernameTf.getText();
+            String password = new String(registerView.passwordPf.getPassword());
+            String confirmPassword = new String(registerView.confirmPasswordPf.getPassword());
             
-            User user = new User();
+            ValidationUtil.notEmpty("first name", firstName);
+            ValidationUtil.notEmpty("last name", lastName);
+            ValidationUtil.notEmpty("IC/Passport number", identityNum);
+            ValidationUtil.notEmpty("email", email);
+            ValidationUtil.notEmpty("username", username);
+            ValidationUtil.notEmpty("password", password);
+            ValidationUtil.notEmpty("confirm password", confirmPassword);
+            
+            username = ValidationUtil.validUsernameFormat("username", username);
+            email = ValidationUtil.validEmailFormat("email", email);
+            
+            if(!password.equals(confirmPassword)){
+                throw new InvalidFieldException(null, "Password doesnt match! Please try again!");
+            }
+            
+            User user = new User(
+                firstName,
+                lastName,
+                email,
+                identityNum,
+                username,
+                password
+            );
+            
+            boolean uniqueUsername = false;
+            boolean uniqueIdentity = false;
+            
             try {
-                LoginRemote loginStub = (LoginRemote)Naming.lookup("rmi://localhost:7777/login");
-                user = loginStub.checkLogin(registerView.usernameTf.getText(), new String(registerView.passwordPf.getPassword()));
+                RegisterRemote registerStub = (RegisterRemote)Naming.lookup("rmi://localhost:7777/register");
+                uniqueUsername = registerStub.checkUsername(username);
+                
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            
+            if(!uniqueUsername){
+                throw new InvalidFieldException(null, "Username is taken! Please try another one!");
+            }
+            
+            try {
+                RegisterRemote registerStub = (RegisterRemote)Naming.lookup("rmi://localhost:7777/register");
+                uniqueIdentity = registerStub.checkIdentityNum(identityNum);
+                
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            
+            if(!uniqueIdentity){
+                throw new InvalidFieldException(null, "IC/Passport Number is taken! Please try another one!");
+            }
+            
+            try {
+                RegisterRemote registerStub = (RegisterRemote)Naming.lookup("rmi://localhost:7777/register");
+                user = registerStub.register(user);
                 
             } catch (Exception e){
                 e.printStackTrace();
@@ -80,7 +135,7 @@ public final class RegisterController {
                 dashboardController.get().index();
                 
             } else {
-                throw new InvalidFieldException("username", "Invalid username or password!");
+                throw new InvalidFieldException(null, "Something's wrong!");
             }
 
         } catch (InvalidFieldException ex) {
