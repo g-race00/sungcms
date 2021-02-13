@@ -7,11 +7,14 @@ package sungcms.login;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import sungcms.user.User;
 
 /**
  *
  * @author mushmush
  */
 public interface LoginRemote extends Remote{
-    public boolean checkLogin(String username, String password) throws RemoteException;
+    public User checkLogin(String username, String password) throws RemoteException;
+    public boolean checkUsername(String username) throws RemoteException;
+    public boolean checkIdentity(String identityNum) throws RemoteException;
 }

@@ -14,8 +14,8 @@ import java.util.*;
  */
 public interface UserRemote extends Remote{
     public List<User> index() throws RemoteException;
-    public Optional<User> show(int id) throws RemoteException;
-    public boolean store(User user) throws RemoteException;
+    public Optional<User> show(String id) throws RemoteException;
+    public String store(User user) throws RemoteException;
     public boolean update(User user) throws RemoteException;
     public boolean delete(User user) throws RemoteException;
 }

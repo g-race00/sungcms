@@ -22,13 +22,12 @@ public class Server {
     public static void main(String[] args) throws RemoteException, SQLException, ClassNotFoundException{
         DBConnection db = new DBConnection();
         try {
-            db.connect();
             Registry reg = LocateRegistry.createRegistry(7777);
             reg.rebind("user",new UserRemoteImpl(db));
             reg.rebind("login", new LoginRemoteImpl(db));
         } catch (Exception e) {
             System.out.println(e);
         }
-        
+
     }
 }

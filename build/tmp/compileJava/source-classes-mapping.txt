@@ -1,37 +1,93 @@
-sungcms/user/UserPage.java
- sungcms.user.UserPage
-sungcms/login/LoginRemoteImpl.java
- sungcms.login.LoginRemoteImpl
-sungcms/user/UserRemote.java
- sungcms.user.UserRemote
-sungcms/Server.java
- sungcms.Server
-sungcms/database/DBConnection.java
- sungcms.database.DBConnection
-sungcms/user/User.java
- sungcms.user.User
-sungcms/user/SceneController.java
- sungcms.user.SceneController
-sungcms/user/UserView.java
- sungcms.user.UserView
-sungcms/user/UserTest.java
- sungcms.user.UserTest
-sungcms/login/LoginRemote.java
- sungcms.login.LoginRemote
 sungcms/user/UserRemoteImpl.java
  sungcms.user.UserRemoteImpl
-sungcms/login/RegisterView.java
- sungcms.login.RegisterView
- sungcms.login.RegisterView$1
- sungcms.login.RegisterView$2
- sungcms.login.RegisterView$3
- sungcms.login.RegisterView$4
- sungcms.login.RegisterView$5
- sungcms.login.RegisterView$6
-sungcms/Client.java
- sungcms.Client
- sungcms.Client$1
+sungcms/register/RegisterView.java
+ sungcms.register.RegisterView
+sungcms/view/ViewUtil.java
+ sungcms.view.ViewUtil
+ sungcms.view.ViewUtil$1
+ sungcms.view.ViewUtil$2
+sungcms/InvalidFieldException.java
+ sungcms.InvalidFieldException
+sungcms/user/UserInfoView.java
+ sungcms.user.UserInfoView
+sungcms/user/SceneController.java
+ sungcms.user.SceneController
+sungcms/view/MainView.java
+ sungcms.view.MainView
+sungcms/dashboard/DashboardView.java
+ sungcms.dashboard.DashboardView
+sungcms/login/LoginController.java
+ sungcms.login.LoginController
+ sungcms.login.LoginController$1
+ sungcms.login.LoginController$2
+sungcms/user/UserTest.java
+ sungcms.user.UserTest
+sungcms/login/LoginViewTest.java
+ sungcms.login.LoginViewTest
+ sungcms.login.LoginViewTest$1
+ sungcms.login.LoginViewTest$2
+sungcms/login/LoginRemoteImpl.java
+ sungcms.login.LoginRemoteImpl
+sungcms/user/UserPage.java
+ sungcms.user.UserPage
+sungcms/view/ContentView.java
+ sungcms.view.ContentView
+ sungcms.view.ContentView$Views
+sungcms/register/RegisterViewTest.java
+ sungcms.register.RegisterViewTest
+ sungcms.register.RegisterViewTest$1
+ sungcms.register.RegisterViewTest$2
+ sungcms.register.RegisterViewTest$3
+ sungcms.register.RegisterViewTest$4
+ sungcms.register.RegisterViewTest$5
+ sungcms.register.RegisterViewTest$6
+sungcms/user/UserController.java
+ sungcms.user.UserController
+sungcms/user/User.java
+ sungcms.user.User
+sungcms/view/RootView.java
+ sungcms.view.RootView
+ sungcms.view.RootView$Views
+sungcms/register/RegisterController.java
+ sungcms.register.RegisterController
+ sungcms.register.RegisterController$1
 sungcms/login/LoginView.java
  sungcms.login.LoginView
- sungcms.login.LoginView$1
- sungcms.login.LoginView$2
+sungcms/App.java
+ sungcms.App
+sungcms/profile/ProfileController.java
+ sungcms.profile.ProfileController
+sungcms/ValidationUtil.java
+ sungcms.ValidationUtil
+sungcms/login/LoginRemote.java
+ sungcms.login.LoginRemote
+sungcms/user/EditUserView.java
+ sungcms.user.EditUserView
+sungcms/menu/MenuController.java
+ sungcms.menu.MenuController
+sungcms/user/UserView.java
+ sungcms.user.UserView
+sungcms/Server.java
+ sungcms.Server
+sungcms/profile/ProfileView.java
+ sungcms.profile.ProfileView
+sungcms/Session.java
+ sungcms.Session
+sungcms/user/AddUserView.java
+ sungcms.user.AddUserView
+sungcms/user/UserRemote.java
+ sungcms.user.UserRemote
+sungcms/database/DBConnection.java
+ sungcms.database.DBConnection
+sungcms/dashboard/DashboardController.java
+ sungcms.dashboard.DashboardController
+sungcms/dashboard/DashboardViewTest.java
+ sungcms.dashboard.DashboardViewTest
+ sungcms.dashboard.DashboardViewTest$1
+sungcms/user/UserListView.java
+ sungcms.user.UserListView
+sungcms/profile/EditProfileView.java
+ sungcms.profile.EditProfileView
+sungcms/menu/MenuView.java
+ sungcms.menu.MenuView
+ sungcms.menu.MenuView$1

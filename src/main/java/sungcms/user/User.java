@@ -10,22 +10,36 @@ package sungcms.user;
  * @author mushmush
  */
 public class User implements java.io.Serializable{
-    private int id;
+    private String id;
     private String firstName;
     private String lastName;
     private String email;
     private String identityNum;
+    private String username;
+    private String password;
+    private boolean admin;
 
-    public User() {};
+    public User() {
+        this.id = "-1";
+        this.lastName = "";
+        this.email = "";
+        this.identityNum = "";
+        this.username = "";
+        this.password = "";
+        this.admin = false;
+    };
     
-    public User(String firstName, String lastName, String email, String identityNum) {
+    public User(String firstName, String lastName, String email, String identityNum, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.identityNum = identityNum;
+        this.username = username;
+        this.password = password;
+        this.admin = false;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -44,8 +58,20 @@ public class User implements java.io.Serializable{
     public String getIdentityNum() {
         return identityNum;
     }
+    
+    public String getUsername(){
+        return username;
+    }
+    
+    public String getPassword() {
+        return password;
+    }
 
-    public void setId(int id) {
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -65,5 +91,15 @@ public class User implements java.io.Serializable{
         this.identityNum = identityNum;
     }
     
+    public void setUsername(String username){
+        this.username = username;
+    }
     
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
 }
