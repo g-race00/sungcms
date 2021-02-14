@@ -4,6 +4,7 @@ import sungcms.view.RootView;
 import sungcms.Session;
 import sungcms.category.CategoryController;
 import sungcms.dashboard.DashboardController;
+import sungcms.grocery.GroceryController;
 import sungcms.login.LoginController;
 import sungcms.profile.ProfileController;
 import sungcms.supplier.SupplierController;
@@ -33,13 +34,15 @@ public final class MenuController {
             final ProfileController profileController,
             final CategoryController categoryController,
             final SupplierController supplierController,
+            final GroceryController groceryController,
             final DashboardController dashboardController) {
 
-        menuView.userBtn.addActionListener(e -> userController.index());
+        menuView.userBtn.addActionListener(e -> userController.index(""));
         menuView.logoutBtn.addActionListener(e -> loginController.logout());
         menuView.profileBtn.addActionListener(e -> profileController.index());
         menuView.categoryBtn.addActionListener(e -> categoryController.index(""));
         menuView.supplierBtn.addActionListener(e -> supplierController.index(""));
+        menuView.groceryBtn.addActionListener(e -> groceryController.index(""));
         menuView.dashboardBtn.addActionListener(e -> dashboardController.index());
     }
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sungcms.user;
+package sungcms.grocery;
 
 import java.rmi.*;
 import java.rmi.server.*;
@@ -16,36 +16,37 @@ import sungcms.database.DBConnection;
  *
  * @author mushmush
  */
-public class UserRemoteImpl extends UnicastRemoteObject implements UserRemote{    
+public class GroceryRemoteImpl extends UnicastRemoteObject implements GroceryRemote{    
     private DBConnection db;
     
-    public UserRemoteImpl(DBConnection db)throws RemoteException{
+    public GroceryRemoteImpl(DBConnection db)throws RemoteException{
         super();
         this.db = db;
     }
     
     @Override
-    public List<User> index(){
-        List<User> list = new ArrayList<User>();
+    public List<Grocery> index(){
+        List<Grocery> list = new ArrayList<Grocery>();
         
         try{
             // Execute a query
             System.out.println("Creating statement...");
-            String sql = "SELECT * FROM users";
+            String sql = "SELECT * FROM groceries";
             ResultSet rs = db.query(sql);
             
             //Extract data from result set
             while(rs.next()){
                 // Setting the values
-                User user = new User();
-                user.setId(rs.getString("id"));
-                user.setFirstName(rs.getString("first_name"));
-                user.setLastName(rs.getString("last_name"));
-                user.setEmail(rs.getString("email"));
-                user.setIdentityNum(rs.getString("identity_num"));
-                user.setUsername(rs.getString("username"));
-                user.setAdmin(rs.getBoolean("admin"));
-                list.add(user);
+                Grocery grocery = new Grocery();
+                grocery.setId(rs.getString("id"));
+                grocery.setName(rs.getString("name"));
+                grocery.setImage(rs.getString("image"));
+                grocery.setDescription(rs.getString("description"));
+                grocery.setPrice(rs.getDouble("price"));
+                grocery.setQuantity(rs.getInt("quantity"));
+                grocery.setCategoryId(rs.getString("category_id"));
+                grocery.setSupplierId(rs.getString("supplier_id"));
+                list.add(grocery);
             }
             
         } catch (Exception e){
@@ -58,27 +59,28 @@ public class UserRemoteImpl extends UnicastRemoteObject implements UserRemote{
     }
 
     @Override
-    public List<User> filter(String string) throws RemoteException{
-        List<User> list = new ArrayList<User>();
+    public List<Grocery> filter(String string) throws RemoteException{
+        List<Grocery> list = new ArrayList<Grocery>();
         
         try{
             // Execute a query
             System.out.println("Creating statement...");
-            String sql = "SELECT * FROM users WHERE id LIKE '%"+ string +"%' OR name LIKE '%" + string +"%'";
+            String sql = "SELECT * FROM groceries WHERE id LIKE '%"+ string +"%' OR name LIKE '%" + string +"%'";
             ResultSet rs = db.query(sql);
             
             //Extract data from result set
             while(rs.next()){
                 // Setting the values
-                User user = new User();
-                user.setId(rs.getString("id"));
-                user.setFirstName(rs.getString("first_name"));
-                user.setLastName(rs.getString("last_name"));
-                user.setEmail(rs.getString("email"));
-                user.setIdentityNum(rs.getString("identity_num"));
-                user.setUsername(rs.getString("username"));
-                user.setAdmin(rs.getBoolean("admin"));
-                list.add(user);
+                Grocery grocery = new Grocery();
+                grocery.setId(rs.getString("id"));
+                grocery.setName(rs.getString("name"));
+                grocery.setImage(rs.getString("image"));
+                grocery.setDescription(rs.getString("description"));
+                grocery.setPrice(rs.getDouble("price"));
+                grocery.setQuantity(rs.getInt("quantity"));
+                grocery.setCategoryId(rs.getString("category_id"));
+                grocery.setSupplierId(rs.getString("supplier_id"));
+                list.add(grocery);
             }
             
         } catch (Exception e){
@@ -91,24 +93,24 @@ public class UserRemoteImpl extends UnicastRemoteObject implements UserRemote{
     }
 
     @Override
-    public User show(String id) throws RemoteException {
-        User user = new User();
+    public Grocery show(String id) throws RemoteException {
+        Grocery grocery = new Grocery();
         try{
             // Execute a query
             System.out.println("Creating statement...");
-            String sql = "SELECT * FROM users WHERE id = " + id + ";";
+            String sql = "SELECT * FROM groceries WHERE id = " + id + ";";
             ResultSet rs = db.query(sql);
             
             if(rs.next()){
                 // Setting the values
-                user.setId(rs.getString("id"));
-                user.setFirstName(rs.getString("first_name"));
-                user.setLastName(rs.getString("last_name"));
-                user.setEmail(rs.getString("email"));
-                user.setIdentityNum(rs.getString("identity_num"));
-                user.setUsername(rs.getString("username"));
-                user.setPassword(rs.getString("password"));
-                user.setAdmin(rs.getBoolean("admin"));
+                grocery.setId(rs.getString("id"));
+                grocery.setName(rs.getString("name"));
+                grocery.setImage(rs.getString("image"));
+                grocery.setDescription(rs.getString("description"));
+                grocery.setPrice(rs.getDouble("price"));
+                grocery.setQuantity(rs.getInt("quantity"));
+                grocery.setCategoryId(rs.getString("category_id"));
+                grocery.setSupplierId(rs.getString("supplier_id"));
             }
             
         } catch (Exception e){
@@ -116,29 +118,31 @@ public class UserRemoteImpl extends UnicastRemoteObject implements UserRemote{
         } finally {
             db.cleanup();
         }
-        return user;
+        return grocery;
     }
 
     @Override
-    public String store(User user) throws RemoteException {
+    public String store(Grocery grocery) throws RemoteException {
         String id = "-1";
-        String admin = user.isAdmin()? "1":"0";
+        String price = String.valueOf(grocery.getPrice());
+        String quantity = String.valueOf(grocery.getQuantity());
+
         try{
             // Execute a query
             System.out.println("Creating statement...");
-            String sql = "INSERT INTO users (username, first_name, last_name, email, identity_num, password, admin)" 
+            String sql = "INSERT INTO groceries (name, image, description, price, quantity, category_id, supplier_id)" 
                     + "VALUES (" 
-                    + "'" + user.getUsername() + "', "
-                    + "'" + user.getFirstName() + "', "
-                    + "'" + user.getLastName() + "', "
-                    + "'" + user.getEmail() + "', "
-                    + "'" + user.getIdentityNum() + "', "
-                    + "'" + user.getPassword() + "', "
-                    +  admin + ")";
+                    + "'" + grocery.getName() + "', "
+                    + "'" + grocery.getImage() + "', "
+                    + "'" + grocery.getDescription() + "', "
+                    + price + ", "
+                    + quantity + ", "
+                    + "'" + grocery.getCategoryId() + "', "
+                    + "'" + grocery.getSupplierId() + "')";
             int flag = db.update(sql);
 
             if(flag == 1){
-                String sqlID = "SELECT id FROM users WHERE username = '" + user.getUsername() + "'";
+                String sqlID = "SELECT id FROM groceries WHERE name = '" + grocery.getName() + "'";
                 ResultSet rs = db.query(sqlID);
                 if(rs.next()){
                     id = rs.getString(1);
@@ -154,25 +158,24 @@ public class UserRemoteImpl extends UnicastRemoteObject implements UserRemote{
     }
 
     @Override
-    public boolean update(User user) throws RemoteException {
+    public boolean update(Grocery grocery) throws RemoteException {
         boolean result = false;
-        String admin = user.isAdmin()? "1":"0";
+        String price = String.valueOf(grocery.getPrice());
+        String quantity = String.valueOf(grocery.getQuantity());
         try{
             // Execute a query
             System.out.println("Creating statement...");
-            String sql = "UPDATE users SET "
-                + "first_name = '" + user.getFirstName() + "', "
-                + "last_name = '" + user.getLastName() + "', "
-                + "email = '" + user.getEmail() + "', "
-                + "identity_num = '" + user.getIdentityNum() + "', "
-                + "username = '" + user.getUsername() + "', "
-                + "password = '" + user.getPassword() + "', "
-                + "admin = " + admin + " "
-                + "WHERE id = " + user.getId() + ";";
+            String sql = "UPDATE groceries SET "
+                + "name = '" + grocery.getName() + "', "
+                + "image = '" + grocery.getImage() + "', "
+                + "description = '" + grocery.getDescription() + "', "
+                + "price = " + price + ", "
+                + "quantity = " + quantity + ", "
+                + "category_id = '" + grocery.getCategoryId() + "', "
+                + "supplier_id = '" + grocery.getSupplierId() + "' "
+                + "WHERE id = " + grocery.getId() + ";";
             
-            System.out.println(sql);
             int flag = db.update(sql);
-            System.out.println("Update :" + flag);
             if(flag == 1){
                 result = true;
             };
@@ -191,7 +194,7 @@ public class UserRemoteImpl extends UnicastRemoteObject implements UserRemote{
         try{
             // Execute a query
             System.out.println("Creating statement...");
-            String sql = "DELETE FROM users WHERE id = " + id + ";";
+            String sql = "DELETE FROM groceries WHERE id = " + id + ";";
             
             int flag = db.update(sql);
             if(flag == 1){
@@ -211,7 +214,7 @@ public class UserRemoteImpl extends UnicastRemoteObject implements UserRemote{
         boolean result = false;
         try{
             System.out.println("Creating statement...");
-            String sql = "SELECT " + label + " FROM users " 
+            String sql = "SELECT " + label + " FROM groceries " 
                 + "WHERE "+ label +" = '" + string + "'";
             ResultSet rs = db.query(sql);
 
@@ -230,7 +233,7 @@ public class UserRemoteImpl extends UnicastRemoteObject implements UserRemote{
         boolean result = false;
         try{
             System.out.println("Creating statement...");
-            String sql = "SELECT " + label + " FROM users " 
+            String sql = "SELECT " + label + " FROM groceries " 
                 + "WHERE "+ label +" = '" + string + "' "
                 + "AND id IS NOT " + id + ";";
             ResultSet rs = db.query(sql);

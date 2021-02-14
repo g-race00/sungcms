@@ -7,6 +7,7 @@ import sungcms.InvalidFieldException;
 import sungcms.view.RootView;
 import sungcms.Session;
 import sungcms.ValidationUtil;
+import sungcms.login.LoginController;
 
 /** User controller. */
 public final class UserController {
@@ -15,11 +16,13 @@ public final class UserController {
     private final UserInfoView userInfoView;
     private final AddUserView addUserView;
     private final EditUserView editUserView;
+    private final LoginController loginController;
     private final RootView rootView;
 
     /** Construct. */
     public UserController(
             final Session session,
+            final LoginController loginController,
             final UserListView userListView,
             final UserInfoView userInfoView,
             final AddUserView addUserView,
@@ -27,6 +30,7 @@ public final class UserController {
             final RootView rootView) {
 
         this.session = session;
+        this.loginController = loginController;
         this.userListView = userListView;
         this.userInfoView = userInfoView;
         this.addUserView = addUserView;
@@ -38,15 +42,15 @@ public final class UserController {
     public void init() {
         userListView.addBtn.addActionListener(e -> create());
         userInfoView.editBtn.addActionListener(e -> edit(e.getActionCommand()));
-        userInfoView.backBtn.addActionListener(e -> index());
+        userInfoView.backBtn.addActionListener(e -> index(userListView.searchTf.getText()));
         addUserView.saveBtn.addActionListener(e -> store());
-        addUserView.cancelBtn.addActionListener(e -> index());
+        addUserView.cancelBtn.addActionListener(e -> index(""));
         editUserView.saveBtn.addActionListener(e -> update(e.getActionCommand()));
         editUserView.cancelBtn.addActionListener(e -> show(e.getActionCommand()));
     }
 
     /** List users. */
-    public void index() {
+    public void index(final String search) {
         rootView.render(RootView.Views.MAIN_VIEW);
         rootView.mainView.contentView.render(ContentView.Views.USER_LIST);
         
@@ -54,8 +58,15 @@ public final class UserController {
         
         try {
             UserRemote userStub = (UserRemote)Naming.lookup("rmi://localhost:7777/user");
+            if(search.isEmpty()){
+                /** Get all users */
+                userList = userStub.index();
+            } else {
+                /** Get filtered users */
+                userList = userStub.filter(search);
+            }
             userList = userStub.index();
-            userListView.render(userList, e -> show(e.getActionCommand()), e -> destroy(e.getActionCommand()));
+            userListView.render(userList, search, e -> show(e.getActionCommand()), e -> destroy(e.getActionCommand(), search));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -274,7 +285,28 @@ public final class UserController {
         }
     }
     
-    public void destroy(final String id){
+    public void destroy(final String id, final String originalParameter){
+        /** Delete user*/
+        boolean result = false;
+        try {
+            UserRemote userStub = (UserRemote)Naming.lookup("rmi://localhost:7777/user");
+            result = userStub.delete(id);
+            
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         
+        /** If success, render index page */
+        if(result){
+            if (id.equals(session.getUser().get().getId())) {
+                rootView.showSuccessDialog("Your account is deleted. Back to Login!");
+                loginController.logout();
+            }else{
+                rootView.showSuccessDialog("User deleted.");
+                index(originalParameter);
+            }
+        } else {
+            rootView.showErrorDialog("Something's wrong! Please try again!");
+        }
     }
 }

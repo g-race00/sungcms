@@ -1,4 +1,4 @@
- package sungcms.user;
+package sungcms.user;
 
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
@@ -7,6 +7,8 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 import sungcms.view.ViewUtil;
 
 /** User list view. */
@@ -23,6 +25,7 @@ public final class UserListView {
     public final JPanel pane;
     private final JPanel tablePane;
     public final JButton addBtn;
+    public final JTextField searchTf;
     private final JPanel headerRow;
 
     /** Construct. */
@@ -32,13 +35,15 @@ public final class UserListView {
         pane = ViewUtil.createContainerPane("User List");
         tablePane = ViewUtil.createContentPane();
         addBtn = new JButton("New");
+        searchTf = ViewUtil.createTextField(20);
         headerRow = ViewUtil.createHeaderRow(COLUMNS, WIDTHS);
-        pane.add(addBtn);
+        pane.add(ViewUtil.createListControlPane(addBtn, searchTf));
         pane.add(tablePane);
     }
 
     /** Render users. */
-    public void render(final List<User> users, final ActionListener goView, final ActionListener goDelete) {
+    public void render(final List<User> users, final String search, final ActionListener goView, final ActionListener goDelete) {
+        searchTf.setText(search);
         tablePane.removeAll();
         tablePane.add(headerRow);
         for (final User u : users) {

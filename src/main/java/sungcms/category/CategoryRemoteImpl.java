@@ -11,6 +11,7 @@ import java.sql.*;
 import java.util.*;
 
 import sungcms.database.DBConnection;
+import sungcms.grocery.Grocery;
 
 /**
  *
@@ -107,6 +108,30 @@ public class CategoryRemoteImpl extends UnicastRemoteObject implements CategoryR
     }
 
     @Override
+    public Category showByName(String name) throws RemoteException {
+        Category category = new Category();
+        try{
+            // Execute a query
+            System.out.println("Creating statement...");
+            String sql = "SELECT * FROM categories WHERE name = '" + name + "';";
+            ResultSet rs = db.query(sql);
+            
+            if(rs.next()){
+                // Setting the values
+                category.setId(rs.getString("id"));
+                category.setName(rs.getString("name"));
+                category.setDescription(rs.getString("description"));
+            }
+            
+        } catch (Exception e){
+            System.out.println(e);
+        } finally {
+            db.cleanup();
+        }
+        return category;
+    }
+
+    @Override
     public String store(Category category) throws RemoteException {
         String id = "-1";
         try{
@@ -159,8 +184,24 @@ public class CategoryRemoteImpl extends UnicastRemoteObject implements CategoryR
     }
 
     @Override
-    public boolean delete(Category category) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean delete(String id) throws RemoteException {
+        boolean result = false;
+        try{
+            // Execute a query
+            System.out.println("Creating statement...");
+            String sql = "DELETE FROM categories WHERE id = " + id + ";";
+            
+            int flag = db.update(sql);
+            if(flag == 1){
+                result = true;
+            };
+            
+        } catch (Exception e){
+            System.out.println(e);
+        } finally {
+            db.cleanup();
+        }
+        return result;
     }
 
     @Override
@@ -203,5 +244,38 @@ public class CategoryRemoteImpl extends UnicastRemoteObject implements CategoryR
         return result;
     }
 
+    @Override
+    public List<Grocery> getLinkGrocery(String id) throws RemoteException{
+        List<Grocery> list = new ArrayList<Grocery>();
+        
+        try{
+            // Execute a query
+            System.out.println("Creating statement...");
+            String sql = "SELECT * FROM groceries WHERE category_id = "+ id + ";";
+            ResultSet rs = db.query(sql);
+            
+            //Extract data from result set
+            while(rs.next()){
+                // Setting the values
+                Grocery grocery = new Grocery();
+                grocery.setId(rs.getString("id"));
+                grocery.setName(rs.getString("name"));
+                grocery.setImage(rs.getString("image"));
+                grocery.setDescription(rs.getString("description"));
+                grocery.setPrice(rs.getDouble("price"));
+                grocery.setQuantity(rs.getInt("quantity"));
+                grocery.setCategoryId(rs.getString("category_id"));
+                grocery.setSupplierId(rs.getString("supplier_id"));
+                list.add(grocery);
+            }
+            
+        } catch (Exception e){
+            System.out.println(e);
+        } finally {
+            db.cleanup();
+        }
+        
+        return list;
+    }
 
 }

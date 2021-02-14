@@ -10,12 +10,11 @@ import sungcms.Session;
 import sungcms.ValidationUtil;
 // import sungcms.product.Product;
 // import sungcms.product.ProductRepository;
+import sungcms.grocery.Grocery;
 
 /** Category controller. */
 public final class CategoryController {
     private final Session session; // NOPMD - temporary
-    // private final CategoryRepository categoryRepository;
-    // private final ProductRepository productRepository;
 
     private final CategoryListView categoryListView;
     private final CategoryInfoView categoryInfoView;
@@ -26,8 +25,6 @@ public final class CategoryController {
     /** Construct. */
     public CategoryController(
             final Session session,
-            // final CategoryRepository categoryRepository,
-            // final ProductRepository productRepository,
             final CategoryListView categoryListView,
             final CategoryInfoView categoryInfoView,
             final AddCategoryView addCategoryView,
@@ -35,8 +32,6 @@ public final class CategoryController {
             final RootView rootView) {
 
         this.session = session;
-        // this.categoryRepository = categoryRepository;
-        // this.productRepository = productRepository;
         this.categoryListView = categoryListView;
         this.categoryInfoView = categoryInfoView;
         this.addCategoryView = addCategoryView;
@@ -100,8 +95,6 @@ public final class CategoryController {
             /** Check not empty */
             ValidationUtil.notEmpty("name", name);
 
-            Category category = new Category(name, description);
-
             /** Check unique */
             boolean uniqueName = false;
             try{
@@ -116,6 +109,8 @@ public final class CategoryController {
             }
 
             /** Store new category and get its id*/
+            Category category = new Category(name, description);
+
             try {
                 CategoryRemote categoryStub = (CategoryRemote)Naming.lookup("rmi://localhost:7777/category");
                 category.setId(categoryStub.store(category));
@@ -199,8 +194,6 @@ public final class CategoryController {
             /** Check not empty */
             ValidationUtil.notEmpty("name", name);
             
-            Category category = new Category(id, name, description);
-            
             /** Check unique */
             boolean uniqueName = false;
             try{
@@ -215,6 +208,8 @@ public final class CategoryController {
             }
 
             /** Check update result */
+            Category category = new Category(id, name, description);
+
             boolean result = false;
             try {
                 CategoryRemote categoryStub = (CategoryRemote)Naming.lookup("rmi://localhost:7777/category");
@@ -238,27 +233,42 @@ public final class CategoryController {
 
     /** Destroy (delete) category. */
     public void destroy(final String id, final String originalParameter) {
-        // try {
-        //     list<Product> linkedProduct
-        //     try{
-
-        //     }
-        //     final Category category = ValidationUtil.recordExists(categoryRepository, id);
-        //     final List<Product> products = productRepository.filter(x ->
-        //             x.getCategoryId().equals(category.getId()));
-        //     if (!products.isEmpty()) {
-        //         // CHECKSTYLE:OFF
-        //         throw new InvalidFieldException("product", String.format(
-        //                 "Cannot delete category, because it was used in the following products: %s",
-        //                 String.join(", ", products.stream().map(Product::getId).collect(Collectors.toList()))));
-        //         // CHECKSTYLE:ON
-        //     }
-
-        //     categoryRepository.delete(category);
-        //     rootView.showSuccessDialog("Category deleted.");
-        //     index(originalParameter);
-        // } catch (InvalidFieldException ex) {
-        //     rootView.showErrorDialog(ex.getMessage());
-        // }
+        try {
+            /** Check whether this category is linked with any grocery */
+            List<Grocery> linkGroceryList = new ArrayList<Grocery>();
+            try{
+                CategoryRemote categoryStub = (CategoryRemote)Naming.lookup("rmi://localhost:7777/category");
+                linkGroceryList = categoryStub.getLinkGrocery(id);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            if(linkGroceryList != null){
+                String error = "Cannot delete category, because it was used in the following products:";
+                for (Grocery g : linkGroceryList){
+                    error = error + '\n' + g.getName();
+                }
+                throw new InvalidFieldException(null, error);
+            } else {
+                /** Delete grocery*/
+                boolean result = false;
+                try {
+                    CategoryRemote categoryStub = (CategoryRemote)Naming.lookup("rmi://localhost:7777/category");
+                    result = categoryStub.delete(id);
+                    
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                
+                /** If success, render index page */
+                if(result){
+                    rootView.showSuccessDialog("Category deleted.");
+                    index(originalParameter);
+                } else {
+                    rootView.showErrorDialog("Something's wrong! Please try again!");
+                }
+            }
+        } catch (InvalidFieldException ex) {
+            rootView.showErrorDialog(ex.getMessage());
+        }
     }
 }

@@ -8,14 +8,11 @@ import sungcms.InvalidFieldException;
 import sungcms.view.RootView;
 import sungcms.Session;
 import sungcms.ValidationUtil;
-// import sungcms.product.Product;
-// import sungcms.product.ProductRepository;
+import sungcms.grocery.Grocery;
 
 /** Supplier controller. */
 public final class SupplierController {
     private final Session session; // NOPMD - temporary
-    // private final SupplierRepository supplierRepository;
-    // private final ProductRepository productRepository;
 
     private final SupplierListView supplierListView;
     private final SupplierInfoView supplierInfoView;
@@ -26,8 +23,6 @@ public final class SupplierController {
     /** Construct. */
     public SupplierController(
             final Session session,
-            // final SupplierRepository supplierRepository,
-            // final ProductRepository productRepository,
             final SupplierListView supplierListView,
             final SupplierInfoView supplierInfoView,
             final AddSupplierView addSupplierView,
@@ -35,8 +30,6 @@ public final class SupplierController {
             final RootView rootView) {
 
         this.session = session;
-        // this.supplierRepository = supplierRepository;
-        // this.productRepository = productRepository;
         this.supplierListView = supplierListView;
         this.supplierInfoView = supplierInfoView;
         this.addSupplierView = addSupplierView;
@@ -73,12 +66,12 @@ public final class SupplierController {
                 supplierList = supplierStub.filter(search);
             }
             supplierListView.render(
-            supplierList,
-            session.getUser().get().isAdmin(),
-            search,
-            e -> show(e.getActionCommand()),
-            e -> destroy(e.getActionCommand(), search)
-        );
+                supplierList,
+                session.getUser().get().isAdmin(),
+                search,
+                e -> show(e.getActionCommand()),
+                e -> destroy(e.getActionCommand(), search)
+            );
             
         } catch (Exception e){
             e.printStackTrace();
@@ -105,7 +98,8 @@ public final class SupplierController {
             ValidationUtil.notEmpty("email", email);
             ValidationUtil.notEmpty("phone", phone);
 
-            Supplier supplier = new Supplier(name, email, phone);
+            email = ValidationUtil.validEmailFormat("email", email);
+            phone = ValidationUtil.validPhoneFormat("phone", phone);
 
             /** Check unique */
             boolean uniqueName = false;
@@ -131,6 +125,8 @@ public final class SupplierController {
             }
 
             /** Store new supplier and get its id*/
+            Supplier supplier = new Supplier(name, email, phone);
+
             try {
                 SupplierRemote supplierStub = (SupplierRemote)Naming.lookup("rmi://localhost:7777/supplier");
                 supplier.setId(supplierStub.store(supplier));
@@ -216,9 +212,7 @@ public final class SupplierController {
             ValidationUtil.notEmpty("name", name);
             ValidationUtil.notEmpty("email", email);
             ValidationUtil.notEmpty("phone", phone);
-            
-            Supplier supplier = new Supplier(id, name, email, phone);
-            
+
             /** Check unique */
             boolean uniqueName = false;
             boolean uniqueEmail = false;
@@ -243,6 +237,8 @@ public final class SupplierController {
             }
 
             /** Check update result */
+            Supplier supplier = new Supplier(id, name, email, phone);
+
             boolean result = false;
             try {
                 SupplierRemote supplierStub = (SupplierRemote)Naming.lookup("rmi://localhost:7777/supplier");
@@ -266,27 +262,42 @@ public final class SupplierController {
 
     /** Destroy (delete) supplier. */
     public void destroy(final String id, final String originalParameter) {
-        // try {
-        //     list<Product> linkedProduct
-        //     try{
-
-        //     }
-        //     final Supplier supplier = ValidationUtil.recordExists(supplierRepository, id);
-        //     final List<Product> products = productRepository.filter(x ->
-        //             x.getSupplierId().equals(supplier.getId()));
-        //     if (!products.isEmpty()) {
-        //         // CHECKSTYLE:OFF
-        //         throw new InvalidFieldException("product", String.format(
-        //                 "Cannot delete supplier, because it was used in the following products: %s",
-        //                 String.join(", ", products.stream().map(Product::getId).collect(Collectors.toList()))));
-        //         // CHECKSTYLE:ON
-        //     }
-
-        //     supplierRepository.delete(supplier);
-        //     rootView.showSuccessDialog("Supplier deleted.");
-        //     index(originalParameter);
-        // } catch (InvalidFieldException ex) {
-        //     rootView.showErrorDialog(ex.getMessage());
-        // }
+        try {
+            /** Check whether this supplier is linked with any grocery */
+            List<Grocery> linkGroceryList = new ArrayList<Grocery>();
+            try{
+                SupplierRemote supplierStub = (SupplierRemote)Naming.lookup("rmi://localhost:7777/supplier");
+                linkGroceryList = supplierStub.getLinkGrocery(id);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            if(linkGroceryList != null){
+                String error = "Cannot delete supplier, because it was used in the following products:";
+                for (Grocery g : linkGroceryList){
+                    error = error + '\n' + g.getName();
+                }
+                throw new InvalidFieldException(null, error);
+            } else {
+                /** Delete grocery*/
+                boolean result = false;
+                try {
+                    SupplierRemote supplierStub = (SupplierRemote)Naming.lookup("rmi://localhost:7777/supplier");
+                    result = supplierStub.delete(id);
+                    
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                
+                /** If success, render index page */
+                if(result){
+                    rootView.showSuccessDialog("Supplier deleted.");
+                    index(originalParameter);
+                } else {
+                    rootView.showErrorDialog("Something's wrong! Please try again!");
+                }
+            }
+        } catch (InvalidFieldException ex) {
+            rootView.showErrorDialog(ex.getMessage());
+        }
     }
 }

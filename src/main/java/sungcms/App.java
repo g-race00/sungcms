@@ -11,6 +11,11 @@ import sungcms.category.CategoryListView;
 import sungcms.category.EditCategoryView;
 import sungcms.dashboard.DashboardController;
 import sungcms.dashboard.DashboardView;
+import sungcms.grocery.AddGroceryView;
+import sungcms.grocery.EditGroceryView;
+import sungcms.grocery.GroceryController;
+import sungcms.grocery.GroceryInfoView;
+import sungcms.grocery.GroceryListView;
 import sungcms.login.LoginController;
 import sungcms.login.LoginView;
 import sungcms.register.RegisterView;
@@ -81,6 +86,11 @@ public final class App {
         final SupplierInfoView supplierInfoView = new SupplierInfoView();
         final AddSupplierView addSupplierView = new AddSupplierView();
         final EditSupplierView editSupplierView = new EditSupplierView();
+        
+        final GroceryListView groceryListView = new GroceryListView();
+        final GroceryInfoView groceryInfoView = new GroceryInfoView();
+        final AddGroceryView addGroceryView = new AddGroceryView();
+        final EditGroceryView editGroceryView = new EditGroceryView();
 
         final DashboardView dashboardView = new DashboardView();
         
@@ -100,6 +110,10 @@ public final class App {
                 supplierInfoView,
                 addSupplierView,
                 editSupplierView,
+                groceryListView,
+                groceryInfoView,
+                addGroceryView,
+                editGroceryView,
                 dashboardView);
 
         final MainView mainView = new MainView(menuView, contentView);
@@ -109,8 +123,19 @@ public final class App {
         final RootView rootView = new RootView(mainView, loginView, registerView);
 
         // Create controllers.
+        final LoginController loginController = new LoginController(
+                session,
+                loginView,
+                rootView);
+        
+        final RegisterController registerController = new RegisterController(
+                session,
+                registerView,
+                rootView);
+
         final UserController userController = new UserController(
                 session,
+                loginController,
                 userListView,
                 userInfoView,
                 addUserView,
@@ -138,6 +163,14 @@ public final class App {
                 addSupplierView,
                 editSupplierView,
                 rootView);
+                
+        final GroceryController groceryController = new GroceryController(
+                session,
+                groceryListView,
+                groceryInfoView,
+                addGroceryView,
+                editGroceryView,
+                rootView);
 
         final DashboardController dashboardController = new DashboardController(
                 session,
@@ -149,20 +182,11 @@ public final class App {
                 menuView,
                 rootView);
 
-        final LoginController loginController = new LoginController(
-                session,
-                loginView,
-                rootView);
-        
-        final RegisterController registerController = new RegisterController(
-                session,
-                registerView,
-                rootView);
-
         userController.init();
         profileController.init();
         categoryController.init();
         supplierController.init();
+        groceryController.init();
         dashboardController.init(
                 userController);
 
@@ -172,6 +196,7 @@ public final class App {
                 profileController,
                 categoryController,
                 supplierController,
+                groceryController,
                 dashboardController);
 
         loginController.init(dashboardController, registerController);

@@ -51,7 +51,7 @@ public final class ProfileView {
         firstNameLbl.setText(user.getFirstName());
         lastNameLbl.setText(user.getLastName());
         emailLbl.setText(user.getEmail());
-        identityLbl.setText(user.getEmail());
+        identityLbl.setText(user.getIdentityNum());
         administratorLbl.setText(user.isAdmin() ? "Yes" : "No");
         usernameLbl.setText(user.getUsername());
         passwordLbl.setText(user.getPassword());

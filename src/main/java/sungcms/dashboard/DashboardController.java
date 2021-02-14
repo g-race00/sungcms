@@ -29,7 +29,7 @@ public final class DashboardController {
     public void init(
             final UserController userController) {
 
-        dashboardView.userListBtn.addActionListener(e -> userController.index());
+        dashboardView.userListBtn.addActionListener(e -> userController.index(""));
     }
 
     /** List users. */

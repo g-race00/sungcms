@@ -8,6 +8,10 @@ import sungcms.category.CategoryInfoView;
 import sungcms.category.CategoryListView;
 import sungcms.category.EditCategoryView;
 import sungcms.dashboard.DashboardView;
+import sungcms.grocery.AddGroceryView;
+import sungcms.grocery.EditGroceryView;
+import sungcms.grocery.GroceryInfoView;
+import sungcms.grocery.GroceryListView;
 import sungcms.profile.EditProfileView;
 import sungcms.profile.ProfileView;
 import sungcms.supplier.AddSupplierView;
@@ -27,8 +31,7 @@ public final class ContentView { // NOPMD - Ok to have many fields
         PROFILE, EDIT_PROFILE,
         CATEGORY_LIST, CATEGORY_INFO, ADD_CATEGORY, EDIT_CATEGORY,
         SUPPLIER_LIST, SUPPLIER_INFO, ADD_SUPPLIER, EDIT_SUPPLIER,
-        PRODUCT_LIST, PRODUCT_INFO, ADD_PRODUCT, EDIT_PRODUCT,
-        CATALOG_LIST, CATALOG_INFO, ADD_CATALOG, EDIT_CATALOG,
+        GROCERY_LIST, GROCERY_INFO, ADD_GROCERY, EDIT_GROCERY,
         DASHBOARD
     }
     
@@ -50,6 +53,11 @@ public final class ContentView { // NOPMD - Ok to have many fields
     public final SupplierInfoView supplierInfoView;
     public final AddSupplierView addSupplierView;
     public final EditSupplierView editSupplierView;
+
+    public final GroceryListView groceryListView;
+    public final GroceryInfoView groceryInfoView;
+    public final AddGroceryView addGroceryView;
+    public final EditGroceryView editGroceryView;
 
     public final DashboardView dashboardView;
 
@@ -73,6 +81,10 @@ public final class ContentView { // NOPMD - Ok to have many fields
             final SupplierInfoView supplierInfoView,
             final AddSupplierView addSupplierView,
             final EditSupplierView editSupplierView,
+            final GroceryListView groceryListView,
+            final GroceryInfoView groceryInfoView,
+            final AddGroceryView addGroceryView,
+            final EditGroceryView editGroceryView,
             final DashboardView dashboardView) {
 
         this.userListView = userListView;
@@ -89,6 +101,10 @@ public final class ContentView { // NOPMD - Ok to have many fields
         this.supplierInfoView = supplierInfoView;
         this.addSupplierView = addSupplierView;
         this.editSupplierView = editSupplierView;
+        this.groceryListView = groceryListView;
+        this.groceryInfoView = groceryInfoView;
+        this.addGroceryView = addGroceryView;
+        this.editGroceryView = editGroceryView;
         this.dashboardView = dashboardView;
 
         cardLayout = ViewUtil.createVariableSizeCardLayout();
@@ -108,6 +124,10 @@ public final class ContentView { // NOPMD - Ok to have many fields
         pane.add(supplierInfoView.pane, Views.SUPPLIER_INFO.name());
         pane.add(addSupplierView.pane, Views.ADD_SUPPLIER.name());
         pane.add(editSupplierView.pane, Views.EDIT_SUPPLIER.name());
+        pane.add(groceryListView.pane, Views.GROCERY_LIST.name());
+        pane.add(groceryInfoView.pane, Views.GROCERY_INFO.name());
+        pane.add(addGroceryView.pane, Views.ADD_GROCERY.name());
+        pane.add(editGroceryView.pane, Views.EDIT_GROCERY.name());
         pane.add(dashboardView.pane, Views.DASHBOARD.name());
     }
 

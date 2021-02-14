@@ -6,6 +6,8 @@
 package sungcms;
 
 import sungcms.database.DBConnection;
+import sungcms.grocery.GroceryRemoteImpl;
+
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -31,6 +33,7 @@ public class Server {
             reg.rebind("register", new RegisterRemoteImpl(db));
             reg.rebind("category", new CategoryRemoteImpl(db));
             reg.rebind("supplier", new SupplierRemoteImpl(db));
+            reg.rebind("grocery", new GroceryRemoteImpl(db));
         } catch (Exception e) {
             System.out.println(e);
         }

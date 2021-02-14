@@ -27,7 +27,8 @@ CREATE TABLE IF NOT EXISTS groceries (
 	name text NOT NULL UNIQUE,
 	image text,
 	description text,
-	quantity integer NOT NULL DEFAULT 10,
+	price integer NOT NULL,
+	quantity integer NOT NULL,
 	category_id integer,
 	supplier_id integer,
 	FOREIGN KEY(category_id)
