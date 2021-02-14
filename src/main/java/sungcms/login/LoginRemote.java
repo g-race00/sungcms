@@ -15,4 +15,5 @@ import sungcms.user.User;
  */
 public interface LoginRemote extends Remote{
     public User login(String username, String password) throws RemoteException;
+    public boolean checkRecord() throws RemoteException;
 }

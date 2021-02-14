@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import sungcms.user.UserRemoteImpl;
 import sungcms.login.LoginRemoteImpl;
 import sungcms.register.RegisterRemoteImpl;
+import sungcms.supplier.SupplierRemoteImpl;
+import sungcms.category.CategoryRemoteImpl;
 
 /**
  *
@@ -27,6 +29,8 @@ public class Server {
             reg.rebind("user",new UserRemoteImpl(db));
             reg.rebind("login", new LoginRemoteImpl(db));
             reg.rebind("register", new RegisterRemoteImpl(db));
+            reg.rebind("category", new CategoryRemoteImpl(db));
+            reg.rebind("supplier", new SupplierRemoteImpl(db));
         } catch (Exception e) {
             System.out.println(e);
         }

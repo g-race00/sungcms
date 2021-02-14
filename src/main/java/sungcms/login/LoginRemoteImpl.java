@@ -53,4 +53,23 @@ public class LoginRemoteImpl extends UnicastRemoteObject implements LoginRemote 
         return user;
     }
 
+    @Override
+    public boolean checkRecord() throws RemoteException{
+        boolean result = false;
+        try{
+            System.out.println("Creating statement...");
+            String sql = "SELECT * FROM users LIMIT 1";
+            ResultSet rs = db.query(sql);
+
+            result = rs.next();
+
+        } catch (Exception e){
+            System.out.println(e);
+        } finally {
+            db.cleanup();
+        }
+
+        return result;
+    }
+
 }

@@ -2,9 +2,18 @@ package sungcms.view;
 
 import java.awt.CardLayout;
 import javax.swing.JPanel;
+
+import sungcms.category.AddCategoryView;
+import sungcms.category.CategoryInfoView;
+import sungcms.category.CategoryListView;
+import sungcms.category.EditCategoryView;
 import sungcms.dashboard.DashboardView;
 import sungcms.profile.EditProfileView;
 import sungcms.profile.ProfileView;
+import sungcms.supplier.AddSupplierView;
+import sungcms.supplier.EditSupplierView;
+import sungcms.supplier.SupplierInfoView;
+import sungcms.supplier.SupplierListView;
 import sungcms.user.AddUserView;
 import sungcms.user.EditUserView;
 import sungcms.user.UserInfoView;
@@ -16,34 +25,36 @@ public final class ContentView { // NOPMD - Ok to have many fields
     public enum Views {
         USER_LIST, USER_INFO, ADD_USER, EDIT_USER, 
         PROFILE, EDIT_PROFILE,
-        LOGIN_RECORD_LIST,
         CATEGORY_LIST, CATEGORY_INFO, ADD_CATEGORY, EDIT_CATEGORY,
         SUPPLIER_LIST, SUPPLIER_INFO, ADD_SUPPLIER, EDIT_SUPPLIER,
         PRODUCT_LIST, PRODUCT_INFO, ADD_PRODUCT, EDIT_PRODUCT,
         CATALOG_LIST, CATALOG_INFO, ADD_CATALOG, EDIT_CATALOG,
         DASHBOARD
     }
-
-    /** User list view. */
+    
+    /** All other views */
     public final UserListView userListView;
-    /** User info view. */
     public final UserInfoView userInfoView;
-    /** Add user view. */
     public final AddUserView addUserView;
-    /** Edit user view. */
     public final EditUserView editUserView;
 
-    /** Profile view. */
     public final ProfileView profileView;
-    /** Edit profile view. */
     public final EditProfileView editProfileView;
 
-    /** Dashboard view. */
+    public final CategoryListView categoryListView;
+    public final CategoryInfoView categoryInfoView;
+    public final AddCategoryView addCategoryView;
+    public final EditCategoryView editCategoryView;
+
+    public final SupplierListView supplierListView;
+    public final SupplierInfoView supplierInfoView;
+    public final AddSupplierView addSupplierView;
+    public final EditSupplierView editSupplierView;
+
     public final DashboardView dashboardView;
 
-    /** Pane. */
+    /** Main GUI element */
     public final JPanel pane;
-    /** Card layout. */
     private final CardLayout cardLayout;
 
     /** Construct. */
@@ -54,6 +65,14 @@ public final class ContentView { // NOPMD - Ok to have many fields
             final EditUserView editUserView,
             final ProfileView profileView,
             final EditProfileView editProfileView,
+            final CategoryListView categoryListView,
+            final CategoryInfoView categoryInfoView,
+            final AddCategoryView addCategoryView,
+            final EditCategoryView editCategoryView,
+            final SupplierListView supplierListView,
+            final SupplierInfoView supplierInfoView,
+            final AddSupplierView addSupplierView,
+            final EditSupplierView editSupplierView,
             final DashboardView dashboardView) {
 
         this.userListView = userListView;
@@ -62,6 +81,14 @@ public final class ContentView { // NOPMD - Ok to have many fields
         this.editUserView = editUserView;
         this.profileView = profileView;
         this.editProfileView = editProfileView;
+        this.categoryListView = categoryListView;
+        this.categoryInfoView = categoryInfoView;
+        this.addCategoryView = addCategoryView;
+        this.editCategoryView = editCategoryView;
+        this.supplierListView = supplierListView;
+        this.supplierInfoView = supplierInfoView;
+        this.addSupplierView = addSupplierView;
+        this.editSupplierView = editSupplierView;
         this.dashboardView = dashboardView;
 
         cardLayout = ViewUtil.createVariableSizeCardLayout();
@@ -73,6 +100,14 @@ public final class ContentView { // NOPMD - Ok to have many fields
         pane.add(editUserView.pane, Views.EDIT_USER.name());
         pane.add(profileView.pane, Views.PROFILE.name());
         pane.add(editProfileView.pane, Views.EDIT_PROFILE.name());
+        pane.add(categoryListView.pane, Views.CATEGORY_LIST.name());
+        pane.add(categoryInfoView.pane, Views.CATEGORY_INFO.name());
+        pane.add(addCategoryView.pane, Views.ADD_CATEGORY.name());
+        pane.add(editCategoryView.pane, Views.EDIT_CATEGORY.name());
+        pane.add(supplierListView.pane, Views.SUPPLIER_LIST.name());
+        pane.add(supplierInfoView.pane, Views.SUPPLIER_INFO.name());
+        pane.add(addSupplierView.pane, Views.ADD_SUPPLIER.name());
+        pane.add(editSupplierView.pane, Views.EDIT_SUPPLIER.name());
         pane.add(dashboardView.pane, Views.DASHBOARD.name());
     }
 

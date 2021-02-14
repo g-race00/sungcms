@@ -3,11 +3,22 @@ package sungcms; // NOPMD - Ok to have high number of imports
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import sungcms.category.AddCategoryView;
+import sungcms.category.CategoryController;
+import sungcms.category.CategoryInfoView;
+import sungcms.category.CategoryListView;
+import sungcms.category.EditCategoryView;
 import sungcms.dashboard.DashboardController;
 import sungcms.dashboard.DashboardView;
 import sungcms.login.LoginController;
 import sungcms.login.LoginView;
 import sungcms.register.RegisterView;
+import sungcms.supplier.AddSupplierView;
+import sungcms.supplier.EditSupplierView;
+import sungcms.supplier.SupplierController;
+import sungcms.supplier.SupplierInfoView;
+import sungcms.supplier.SupplierListView;
 import sungcms.menu.MenuController;
 import sungcms.menu.MenuView;
 import sungcms.profile.EditProfileView;
@@ -61,6 +72,16 @@ public final class App {
         final ProfileView profileView = new ProfileView();
         final EditProfileView editProfileView = new EditProfileView();
 
+        final CategoryListView categoryListView = new CategoryListView();
+        final CategoryInfoView categoryInfoView = new CategoryInfoView();
+        final AddCategoryView addCategoryView = new AddCategoryView();
+        final EditCategoryView editCategoryView = new EditCategoryView();
+        
+        final SupplierListView supplierListView = new SupplierListView();
+        final SupplierInfoView supplierInfoView = new SupplierInfoView();
+        final AddSupplierView addSupplierView = new AddSupplierView();
+        final EditSupplierView editSupplierView = new EditSupplierView();
+
         final DashboardView dashboardView = new DashboardView();
         
         final MenuView menuView = new MenuView();
@@ -71,6 +92,14 @@ public final class App {
                 editUserView,
                 profileView,
                 editProfileView,
+                categoryListView,
+                categoryInfoView,
+                addCategoryView,
+                editCategoryView,
+                supplierListView,
+                supplierInfoView,
+                addSupplierView,
+                editSupplierView,
                 dashboardView);
 
         final MainView mainView = new MainView(menuView, contentView);
@@ -87,10 +116,27 @@ public final class App {
                 addUserView,
                 editUserView,
                 rootView);
+
         final ProfileController profileController = new ProfileController(
                 session,
                 profileView,
                 editProfileView,
+                rootView);
+        
+        final CategoryController categoryController = new CategoryController(
+                session,
+                categoryListView,
+                categoryInfoView,
+                addCategoryView,
+                editCategoryView,
+                rootView);
+
+        final SupplierController supplierController = new SupplierController(
+                session,
+                supplierListView,
+                supplierInfoView,
+                addSupplierView,
+                editSupplierView,
                 rootView);
 
         final DashboardController dashboardController = new DashboardController(
@@ -115,6 +161,8 @@ public final class App {
 
         userController.init();
         profileController.init();
+        categoryController.init();
+        supplierController.init();
         dashboardController.init(
                 userController);
 
@@ -122,6 +170,8 @@ public final class App {
                 loginController,
                 userController,
                 profileController,
+                categoryController,
+                supplierController,
                 dashboardController);
 
         loginController.init(dashboardController, registerController);

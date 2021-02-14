@@ -75,7 +75,19 @@ public final class LoginController {
         try {
             ValidationUtil.notEmpty("username", loginView.usernameTf.getText());
             ValidationUtil.notEmpty("password", loginView.passwordPf.getPassword());
-            
+
+            boolean hasUserRecord = false;
+            try {
+                LoginRemote loginStub = (LoginRemote)Naming.lookup("rmi://localhost:7777/login");
+                hasUserRecord = loginStub.checkRecord();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+            if(!hasUserRecord){
+                throw new InvalidFieldException(null, "No user record found! Please register!");
+            }
+
             User user = new User();
             try {
                 LoginRemote loginStub = (LoginRemote)Naming.lookup("rmi://localhost:7777/login");
@@ -89,7 +101,7 @@ public final class LoginController {
                 rootView.mainView.menuView.render(user);
                 dashboardController.get().index();
             } else {
-                throw new InvalidFieldException("username", "Invalid username or password!");
+                throw new InvalidFieldException(null, "Invalid username or password!");
             }
 
         } catch (InvalidFieldException ex) {

@@ -62,39 +62,6 @@ public final class ValidationUtil {
         return x;
     }
 
-    /** Make sure x does not exists in cache. */
-//    public static <T, U> U notExists(
-//            final String label, 
-//            final U x, 
-//            final Collection<T> cache, 
-//            final Function<T, U> fieldGetter) {
-//
-//        if (cache.stream().anyMatch(y -> fieldGetter.apply(y).equals(x))) {
-//            throw new InvalidFieldException(label, String.join("", capitalize(label), 
-//                    " has been used. Choose another one."));
-//        }
-//        return x;
-//    }
-
-    /** Make sure x does not exists in cache, ignoring certain row. */
-//    public static <T, U, V> U notExists(
-//            final String label, 
-//            final U x, 
-//            final Collection<T> cache, 
-//            final Function<T, U> fieldGetter,
-//            final V ignore,
-//            final Function<T, V> ignoreGetter) {
-//
-//        if (cache.stream()
-//                .filter(y -> !ignoreGetter.apply(y).equals(ignore))
-//                .anyMatch(y -> fieldGetter.apply(y).equals(x))) {
-//
-//            throw new InvalidFieldException(label, String.join("", capitalize(label),
-//                    " has been used. Choose another one."));
-//        }
-//        return x;
-//    }
-    
     /** Make sure x is not negative. */
     public static double notNegative(final String label, final double num) {
         if (num < 0) {

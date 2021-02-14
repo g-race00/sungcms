@@ -23,7 +23,7 @@ public final class MenuView {
     public final JButton userBtn;
     public final JButton supplierBtn;
     public final JButton categoryBtn;
-    public final JButton productBtn;
+    public final JButton groceryBtn;
 
     /** Construct. */
     public MenuView() {
@@ -35,7 +35,7 @@ public final class MenuView {
         userBtn = new JButton("User");
         supplierBtn = new JButton("Supplier");
         categoryBtn = new JButton("Category");
-        productBtn = new JButton("Product");
+        groceryBtn = new JButton("Grocery");
 
         pane.setLayout(new BoxLayout(pane, BoxLayout.PAGE_AXIS));
         pane.setMaximumSize(new Dimension(pane.getMaximumSize().width, Integer.MAX_VALUE));
@@ -49,7 +49,7 @@ public final class MenuView {
         pane.add(styleBtn(userBtn));
         pane.add(styleBtn(supplierBtn));
         pane.add(styleBtn(categoryBtn));
-        pane.add(styleBtn(productBtn));
+        pane.add(styleBtn(groceryBtn));
     }
 
     /** Render user. */
