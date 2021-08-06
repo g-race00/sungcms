@@ -187,8 +187,7 @@ public final class App {
         categoryController.init();
         supplierController.init();
         groceryController.init();
-        dashboardController.init(
-                userController);
+        dashboardController.init();
 
         menuController.init(
                 loginController,

@@ -11,7 +11,6 @@ import sungcms.user.User;
 public final class ProfileView {
     public final JPanel pane;
     public final JButton editBtn;
-    public final JLabel idLbl;
     public final JLabel firstNameLbl;
     public final JLabel lastNameLbl;
     public final JLabel identityLbl;
@@ -25,7 +24,6 @@ public final class ProfileView {
         pane = ViewUtil.createContainerPane("Profile");
 
         editBtn = new JButton("Edit");
-        idLbl = ViewUtil.createValueLabel();
         firstNameLbl = ViewUtil.createValueLabel();
         lastNameLbl = ViewUtil.createValueLabel();
         identityLbl = ViewUtil.createValueLabel();
@@ -35,10 +33,10 @@ public final class ProfileView {
         passwordLbl = ViewUtil.createValueLabel();
 
         final String[] labels = {
-                "ID", "First Name", "Last Name", "IC/Passport No", "Email",
+                "First Name", "Last Name", "IC/Passport No", "Email",
                 "Administrator", "Username", "Password"};
         final JComponent[] components = {
-                idLbl, firstNameLbl, lastNameLbl, identityLbl, emailLbl, 
+                firstNameLbl, lastNameLbl, identityLbl, emailLbl, 
                 administratorLbl, usernameLbl, passwordLbl};
 
         pane.add(ViewUtil.createButtonControlPane(editBtn));
@@ -47,7 +45,6 @@ public final class ProfileView {
 
     /** Render. */
     public void render(final User user) {
-        idLbl.setText(String.valueOf(user.getId()));
         firstNameLbl.setText(user.getFirstName());
         lastNameLbl.setText(user.getLastName());
         emailLbl.setText(user.getEmail());

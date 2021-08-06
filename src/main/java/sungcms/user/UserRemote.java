@@ -18,6 +18,8 @@ public interface UserRemote extends Remote{
     public String store(User user) throws RemoteException; //Return newly added user.id integer
     public boolean update(User user) throws RemoteException; //Retrun true/false
     public boolean delete(String id) throws RemoteException; //Return true/false
-    public boolean checkUnique(String label, String string) throws RemoteException; //Return true/false
-    public boolean checkUniqueOther(String label, String string, String id) throws RemoteException; //Return true/false
+    public boolean checkUnique(String label, String string) 
+        throws RemoteException; //Return true/false
+    public boolean checkUniqueOther(String label, String string, String id) 
+        throws RemoteException; //Return true/false
 }

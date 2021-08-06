@@ -11,8 +11,8 @@ import javax.swing.JTextField;
 import sungcms.view.ViewUtil;
 
 public final class CategoryListView {
-    private static final String[] COLUMNS = {"ID", "Name", "Description", "Actions"};
-    private static final int[] WIDTHS = {70, 120, 210, 200};
+    private static final String[] COLUMNS = {"ID", "Name","Actions"};
+    private static final int[] WIDTHS = {70, 150, 200};
 
     public final JPanel pane;
     private final JPanel tablePane;
@@ -73,7 +73,6 @@ public final class CategoryListView {
         final JComponent[] components = {
                 ViewUtil.createUnboldLabel(category.getId()),
                 ViewUtil.createUnboldLabel(category.getName()),
-                ViewUtil.createUnboldLabel(category.getDescription()),
                 actionPane};
 
         return ViewUtil.createBodyRow(components, WIDTHS);

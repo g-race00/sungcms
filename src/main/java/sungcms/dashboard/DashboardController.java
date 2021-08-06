@@ -3,7 +3,7 @@ package sungcms.dashboard;
 import sungcms.view.ContentView;
 import sungcms.view.RootView;
 import sungcms.Session;
-import sungcms.user.UserController;
+import sungcms.user.User;
 
 /** Dashboard controller. */
 public final class DashboardController {
@@ -26,18 +26,13 @@ public final class DashboardController {
     }
 
     /** Initialize. */
-    public void init(
-            final UserController userController) {
-
-        dashboardView.userListBtn.addActionListener(e -> userController.index(""));
-    }
+    public void init() {}
 
     /** List users. */
     public void index() {
+        final User user = session.getUser().get();
         rootView.render(RootView.Views.MAIN_VIEW);
         rootView.mainView.contentView.render(ContentView.Views.DASHBOARD);
-        dashboardView.render(
-                null,
-                true);
+        dashboardView.render(user);
     }
 }

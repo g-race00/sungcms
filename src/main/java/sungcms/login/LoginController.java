@@ -78,20 +78,25 @@ public final class LoginController {
 
             boolean hasUserRecord = false;
             try {
-                LoginRemote loginStub = (LoginRemote)Naming.lookup("rmi://localhost:7777/login");
+                LoginRemote loginStub = (LoginRemote)Naming
+                    .lookup("rmi://localhost:7777/login");
                 hasUserRecord = loginStub.checkRecord();
             } catch (Exception e){
                 e.printStackTrace();
             }
 
             if(!hasUserRecord){
-                throw new InvalidFieldException(null, "No user record found! Please register!");
+                throw new InvalidFieldException(null, 
+                    "No user record found! Please register!");
             }
 
             User user = new User();
             try {
-                LoginRemote loginStub = (LoginRemote)Naming.lookup("rmi://localhost:7777/login");
-                user = loginStub.login(loginView.usernameTf.getText(), new String(loginView.passwordPf.getPassword()));
+                LoginRemote loginStub = (LoginRemote)Naming
+                    .lookup("rmi://localhost:7777/login");
+                user = loginStub.login(
+                        loginView.usernameTf.getText(),
+                        new String(loginView.passwordPf.getPassword()));
             } catch (Exception e){
                 e.printStackTrace();
             }

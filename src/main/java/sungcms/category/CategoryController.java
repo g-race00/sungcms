@@ -242,7 +242,8 @@ public final class CategoryController {
             } catch (Exception e){
                 e.printStackTrace();
             }
-            if(linkGroceryList != null){
+            System.out.println("Empty :" + linkGroceryList.isEmpty());
+            if(!linkGroceryList.isEmpty()){
                 String error = "Cannot delete category, because it was used in the following products:";
                 for (Grocery g : linkGroceryList){
                     error = error + '\n' + g.getName();

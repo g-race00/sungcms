@@ -256,6 +256,7 @@ public class CategoryRemoteImpl extends UnicastRemoteObject implements CategoryR
             
             //Extract data from result set
             while(rs.next()){
+                System.out.println("Found");
                 // Setting the values
                 Grocery grocery = new Grocery();
                 grocery.setId(rs.getString("id"));
@@ -266,6 +267,7 @@ public class CategoryRemoteImpl extends UnicastRemoteObject implements CategoryR
                 grocery.setQuantity(rs.getInt("quantity"));
                 grocery.setCategoryId(rs.getString("category_id"));
                 grocery.setSupplierId(rs.getString("supplier_id"));
+                System.out.println(grocery.getName());
                 list.add(grocery);
             }
             

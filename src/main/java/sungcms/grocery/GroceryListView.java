@@ -17,10 +17,10 @@ import sungcms.view.ViewUtil;
 public final class GroceryListView {
     private static final String[] COLUMNS = {
             "ID", "Image", "Name", "Price", 
-            "Quantity", "Category", "Supplier", "Actions"};
+            "Quantity", "Category", "Actions"};
     private static final int[] WIDTHS = {
-            70, 70, 120, 60, 
-            60, 100, 100, 160};
+            70, 70, 120, 100, 
+            100, 100, 160};
 
     public final JPanel pane;
     private final JPanel tablePane;
@@ -89,7 +89,6 @@ public final class GroceryListView {
                 ViewUtil.createUnboldLabel(String.format("%.2f", grocery.getPrice())),
                 ViewUtil.createUnboldLabel(Integer.toString(grocery.getQuantity())),
                 ViewUtil.createUnboldLabel(grocery.getCategoryName(categories)),
-                ViewUtil.createUnboldLabel(grocery.getSupplierName(suppliers)),
                 actionPane};
 
         return ViewUtil.createBodyRow(components, WIDTHS);

@@ -16,11 +16,11 @@ public final class UserListView {
     /** Table columns. */
     private static final String[] COLUMNS = {
             "ID", "First name", "Last Name", "Email", "IC/Passport",
-            "Admin", "Username", "Actions"};
+            "Admin", "Actions"};
     /** Table column width. */
     private static final int[] WIDTHS = {
-            70, 100, 100, 150, 100, 
-            60, 100, 160};
+            70, 100, 100, 150, 120, 
+            60, 160};
 
     public final JPanel pane;
     private final JPanel tablePane;
@@ -75,7 +75,6 @@ public final class UserListView {
                 ViewUtil.createUnboldLabel(user.getEmail()),
                 ViewUtil.createUnboldLabel(user.getIdentityNum()),
                 ViewUtil.createUnboldLabel(user.isAdmin() ? "Yes" : ""),
-                ViewUtil.createUnboldLabel(user.getUsername()),
                 actionPane
         };
 

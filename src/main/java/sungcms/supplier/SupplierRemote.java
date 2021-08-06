@@ -23,6 +23,7 @@ public interface SupplierRemote extends Remote{
     public boolean update(Supplier supplier) throws RemoteException; //Retrun true/false
     public boolean delete(String id) throws RemoteException; //Return true/false
     public boolean checkUnique(String label, String string) throws RemoteException; //Return true/false
-    public boolean checkUniqueOther(String label, String string, String id) throws RemoteException; //Return true/false
+    public boolean checkUniqueOther(String label, String string, String id) 
+        throws RemoteException; //Return true/false
     public List<Grocery> getLinkGrocery(String id) throws RemoteException; //Return list of grocery
 }

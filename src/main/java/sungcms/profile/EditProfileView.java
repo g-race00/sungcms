@@ -14,7 +14,6 @@ public final class EditProfileView {
     public final JPanel pane;
     public final JButton cancelBtn;
     public final JButton saveBtn;
-    public final JLabel idLbl;
     public final JTextField firstNameTf;
     public final JTextField lastNameTf;
     public final JTextField identityTf;
@@ -29,7 +28,6 @@ public final class EditProfileView {
 
         cancelBtn = new JButton("Cancel");
         saveBtn = new JButton("Save");
-        idLbl = new JLabel();
         firstNameTf = ViewUtil.createTextField(25);
         lastNameTf = ViewUtil.createTextField(25);
         identityTf = ViewUtil.createTextField(25);
@@ -39,10 +37,10 @@ public final class EditProfileView {
         passwordPf = ViewUtil.createPasswordField(25);
 
         final String[] labels = {
-                "ID", "First Name", "Last Name", "IC/Passport No", "Email",
+                "First Name", "Last Name", "IC/Passport No", "Email",
                 "Administrator", "Username", "Password"};
         final JComponent[] components = {
-                idLbl, firstNameTf, lastNameTf, identityTf, emailTf, 
+                firstNameTf, lastNameTf, identityTf, emailTf, 
                 administratorLbl, usernameTf, passwordPf};
 
         pane.add(ViewUtil.createButtonControlPane(cancelBtn, saveBtn));
@@ -51,7 +49,6 @@ public final class EditProfileView {
 
     /** Render. */
     public void render(final User user) {
-        idLbl.setText(String.valueOf(user.getId()));
         firstNameTf.setText(user.getFirstName());
         lastNameTf.setText(user.getLastName());
         emailTf.setText(user.getEmail());

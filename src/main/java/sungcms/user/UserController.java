@@ -66,7 +66,9 @@ public final class UserController {
                 userList = userStub.filter(search);
             }
             userList = userStub.index();
-            userListView.render(userList, search, e -> show(e.getActionCommand()), e -> destroy(e.getActionCommand(), search));
+            userListView.render(userList, search, e -> show(
+                e.getActionCommand()), 
+                e -> destroy(e.getActionCommand(), search));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -125,15 +127,18 @@ public final class UserController {
             }
             
             if(!uniqueUsername){
-                throw new InvalidFieldException(null, "Username is taken! Please try another one!");
+                throw new InvalidFieldException(null, 
+                    "Username is taken! Please try another one!");
             }
             
             if(!uniqueIdentity){
-                throw new InvalidFieldException(null, "IC/Passport Number is taken! Please try another one!");
+                throw new InvalidFieldException(null, 
+                    "IC/Passport Number is taken! Please try another one!");
             }
             
             if(!uniqueEmail){
-                throw new InvalidFieldException(null, "Email is taken! Please try another one!");
+                throw new InvalidFieldException(null, 
+                    "Email is taken! Please try another one!");
             }
             
             try {
@@ -250,15 +255,18 @@ public final class UserController {
             }
             
             if(!uniqueUsername){
-                throw new InvalidFieldException(null, "Username is taken! Please try another one!");
+                throw new InvalidFieldException(null, 
+                    "Username is taken! Please try another one!");
             }
             
             if(!uniqueIdentity){
-                throw new InvalidFieldException(null, "IC/Passport Number is taken! Please try another one!");
+                throw new InvalidFieldException(null, 
+                    "IC/Passport Number is taken! Please try another one!");
             }
             
             if(!uniqueEmail){
-                throw new InvalidFieldException(null, "Email is taken! Please try another one!");
+                throw new InvalidFieldException(null, 
+                    "Email is taken! Please try another one!");
             }
             
             boolean result = false;

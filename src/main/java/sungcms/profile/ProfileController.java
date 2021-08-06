@@ -5,6 +5,7 @@ import sungcms.view.ContentView;
 import sungcms.InvalidFieldException;
 import sungcms.view.RootView;
 import sungcms.Session;
+import sungcms.ValidationUtil;
 import sungcms.user.User;
 import sungcms.user.UserRemote;
 
@@ -59,13 +60,54 @@ public final class ProfileController {
     public void update() {
         try {
             final User user = session.getUser().get();
+
+            String firstName = editProfileView.firstNameTf.getText();
+            String lastName = editProfileView.lastNameTf.getText();
+            String identityNum = editProfileView.identityTf.getText();
+            String email = editProfileView.emailTf.getText();
+            String username = editProfileView.usernameTf.getText();
+            String password = new String(editProfileView.passwordPf.getPassword());
+            
+            ValidationUtil.notEmpty("first name", firstName);
+            ValidationUtil.notEmpty("last name", lastName);
+            ValidationUtil.notEmpty("IC/Passport number", identityNum);
+            ValidationUtil.notEmpty("email", email);
+            ValidationUtil.notEmpty("username", username);
+            ValidationUtil.notEmpty("password", password);
+
+            boolean uniqueUsername = false;
+            boolean uniqueIdentity = false;
+            boolean uniqueEmail = false;
+            
+            try {
+                UserRemote userStub = (UserRemote)Naming.lookup("rmi://localhost:7777/user");
+                uniqueUsername = userStub.checkUniqueOther("username", username, user.getId());
+                uniqueIdentity = userStub.checkUniqueOther("identity_num", identityNum, user.getId());
+                uniqueEmail = userStub.checkUniqueOther("email", email, user.getId());
+                
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            
+            if(!uniqueUsername){
+                throw new InvalidFieldException(null, "Username is taken! Please try another one!");
+            }
+            
+            if(!uniqueIdentity){
+                throw new InvalidFieldException(null, "IC/Passport Number is taken! Please try another one!");
+            }
+            
+            if(!uniqueEmail){
+                throw new InvalidFieldException(null, "Email is taken! Please try another one!");
+            }
+
             user.setFirstName(editProfileView.firstNameTf.getText());
             user.setLastName(editProfileView.lastNameTf.getText());
             user.setEmail(editProfileView.emailTf.getText());
             user.setIdentityNum(editProfileView.identityTf.getText());
             user.setUsername(editProfileView.usernameTf.getText());
             user.setPassword(new String(editProfileView.passwordPf.getPassword()));
-            
+
             boolean result = false;
             try {
                 UserRemote userRemote = (UserRemote)Naming.lookup("rmi://localhost:7777/user");
